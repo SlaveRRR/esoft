@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Дом</title>
+</head>
+<body>
+    <h2>Домашняя страница</h2>
+
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <input type="text" name="query" placeholder="Введите ФИО">
+        <button type="submit">Искать</button>
+    </form>
+
+    {% for user in users %}
+        {{user}}
+    {% empty %}
+        <p>Результаты не найдены</p>
+    {% endfor %}
+</body>
+</html>

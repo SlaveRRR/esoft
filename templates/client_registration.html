@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация клиента</title>
+</head>
+<body>
+    <h2>Регистрация клиента</h2>
+    <!-- <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">sign up</button>
+    </form> -->
+
+
+    <div id="container_form" >
+        <form  action="{% url 'client_registration' %}" method="post" autocomplete="on">
+                    {% csrf_token %}
+
+                    <h1> Sign up </h1>
+
+                    <p>
+                        <label for="nicknamesignup" class="nickname" data-icon="u">Your nickname</label>
+                        <input id="nicknamesignup" name="nicknamesignup" type="text" />
+                    </p>
+                    <p>
+                        <label for="firstnamesignup" class="firstname" data-icon="u">Your firstname</label>
+                        <input id="firstnamesignup" name="firstnamesignup" type="text"  />
+                    </p>
+                    <p>
+                        <label for="lastnamesignup" class="lastname" data-icon="u">Your lastname</label>
+                        <input id="lastnamesignup" name="lastnamesignup" type="text"  />
+                    </p>
+                    <p>
+                        <label for="middlenamesignup" class="middlename" data-icon="u">Your middlename</label>
+                        <input id="middlenamesignup" name="middlenamesignup" type="text"  />
+                    </p>
+                    <p>
+                        <label for="emailsignup" class="email" data-icon="e" > Your email</label>
+                        <input id="emailsignup" name="emailsignup"  type="email"/>
+                    </p>
+                    <p>
+                        <label for="phonesignup" class="phone" data-icon="e" > Your phone</label>
+                        <input id="phonesignup" name="phonesignup"  type="tel"/>
+                    </p>
+                    <p>
+                        <label for="passwordsignup" class="password" data-icon="p">Your password </label>
+                        <input id="passwordsignup" name="passwordsignup" required="required" type="password" />
+                    </p>
+                    <p>
+                        <label for="passwordsignup_confirm" class="password" data-icon="p">Please confirm your password </label>
+                        <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" />
+                    </p>
+                    <p class="signup button">
+                        <input type="submit" value="Sign up"/>
+                    </p>
+        </form>
+    </div>
+</body>
+</html> 
