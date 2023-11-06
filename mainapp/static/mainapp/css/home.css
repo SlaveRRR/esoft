@@ -1,0 +1,13 @@
+.heading__home {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.search__home {
+    margin-bottom: 30px;
+}
+
+.btn_home {
+    background-color: white;
+}

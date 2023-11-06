@@ -1,52 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Регистрация клиента</title>
-</head>
-<body>
-    <h2>Регистрация клиента</h2>
-    <!-- <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">sign up</button>
-    </form> -->
+{% extends 'base.html' %}
 
+{% load static %}
+
+{% block style %}<link type="text/css" rel="stylesheet" href="{% static 'mainapp/css/client_registration.css' %}">{% endblock style %}
+
+{% block content %}
+
+    <h1 class="heading__register">Регистрация клиента</h1>
 
     <div id="container_form" >
         <form  action="{% url 'client_registration' %}" method="post" autocomplete="on">
                     {% csrf_token %}
 
-                    <h1> Sign up </h1>
-
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="nicknamesignup" class="nickname" data-icon="u">Your nickname</label>
                         <input id="nicknamesignup" name="nicknamesignup" type="text" />
                     </p>
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="firstnamesignup" class="firstname" data-icon="u">Your firstname</label>
                         <input id="firstnamesignup" name="firstnamesignup" type="text"  />
                     </p>
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="lastnamesignup" class="lastname" data-icon="u">Your lastname</label>
                         <input id="lastnamesignup" name="lastnamesignup" type="text"  />
                     </p>
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="middlenamesignup" class="middlename" data-icon="u">Your middlename</label>
                         <input id="middlenamesignup" name="middlenamesignup" type="text"  />
                     </p>
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="emailsignup" class="email" data-icon="e" > Your email</label>
                         <input id="emailsignup" name="emailsignup"  type="email"/>
                     </p>
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="phonesignup" class="phone" data-icon="e" > Your phone</label>
                         <input id="phonesignup" name="phonesignup"  type="tel"/>
                     </p>
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="passwordsignup" class="password" data-icon="p">Your password </label>
                         <input id="passwordsignup" name="passwordsignup" required="required" type="password" />
                     </p>
-                    <p>
+                    <p class="form_auth_reg">
                         <label for="passwordsignup_confirm" class="password" data-icon="p">Please confirm your password </label>
                         <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" />
                     </p>
@@ -55,5 +49,4 @@
                     </p>
         </form>
     </div>
-</body>
-</html> 
+{% endblock %}

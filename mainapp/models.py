@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     commission = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     is_realtor = models.BooleanField(null=True)
     email = models.EmailField(blank=True, null=True)
+    Active = models.SmallIntegerField(null=True, default=1)
     
     objects = CustomUserManager()
 
@@ -44,4 +45,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.nickname
-    
+
+class RealEstate(models.Model):
+    id = models.AutoField(primary_key=True)
+    heading = models.CharField(max_length=255, null=True)
+    type = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
+    street = models.CharField(max_length=255, null=True)
+    house_number = models.CharField(max_length=255, null=True)
+    apartment_number = models.CharField(max_length=255, null=True)
+    latitude = models.CharField(max_length=255, null=True)
+    longitude = models.CharField(max_length=255, null=True)
+    floor = models.CharField(max_length=255, null=True)
+    number_of_floors = models.CharField(max_length=255, null=True)
+    number_of_rooms = models.CharField(max_length=255, null=True)
+    square = models.CharField(max_length=255, null=True)
+
+class User_Real_estate(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_real_estate = models.ForeignKey(RealEstate, on_delete=models.CASCADE)

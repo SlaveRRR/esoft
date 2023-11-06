@@ -1,46 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Регистрация риэлтора</title>
-</head>
-<body>
-    <h2>Регистрация риэлтора</h2>
-    <!-- <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зарегистрироваться</button>
-    </form> -->
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}<link type="text/css" rel="stylesheet" href="{% static 'mainapp/css/realtor_registration.css' %}">{% endblock style %}
+
+{% block content %}
+
+    <h1 class="heading__register">Регистрация риэлтора</h1>
+
     <div class="register_container">
         <form  action="{% url 'realtor_registration' %}" method="post" autocomplete="on">
             {% csrf_token %}
 
-            <h1> Sign up </h1>
-
-            <p>
+            <p class="form_auth_reg">
                 <label for="nicknamesignup" class="nickname" data-icon="u">Your nickname</label>
                 <input id="nicknamesignup" name="nicknamesignup" type="text"  required="required"/>
             </p>
-            <p>
+            <p class="form_auth_reg">
                 <label for="firstnamesignup" class="firstname" data-icon="u">Your firstname</label>
                 <input id="firstnamesignup" name="firstnamesignup" required="required" type="text"  />
             </p>
-            <p>
+            <p class="form_auth_reg">
                 <label for="lastnamesignup" class="lastname" data-icon="u">Your lastname</label>
                 <input id="lastnamesignup" name="lastnamesignup" required="required" type="text"  />
             </p>
-            <p>
+            <p class="form_auth_reg">
                 <label for="middlenamesignup" class="middlename" data-icon="u">Your middlename</label>
                 <input id="middlenamesignup" name="middlenamesignup" required="required" type="text"  />
             </p>
-            <p>
+            <p class="form_auth_reg">
                 <label for="commissionsignup" class="commission" data-icon="e" > Your commission</label>
                 <input id="commissionsignup" name="1" type="commission"/>
             </p>
-            <p>
+            <p class="form_auth_reg">
                 <label for="passwordsignup" class="password" data-icon="p">Your password </label>
                 <input id="passwordsignup" name="passwordsignup" required="required" type="password" />
             </p>
-            <p>
+            <p class="form_auth_reg">
                 <label for="passwordsignup_confirm" class="password" data-icon="p">Please confirm your password </label>
                 <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" />
             </p>
@@ -49,5 +45,4 @@
             </p>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

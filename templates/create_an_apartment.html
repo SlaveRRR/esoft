@@ -1,0 +1,56 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Создание квартиры</h1>
+    
+    <hr>
+
+    <div> 
+        <form action="{% url 'create_an_apartment' %}" method="post">
+            {% csrf_token %}
+            
+            <p>Название вашей недвижимости</p>
+            <input name="heading" type="text">
+
+            <p>Город</p>
+            <input name="city" type="text">
+
+            <p>Улица</p>
+            <input name="street" type="text">
+
+            <p>Номер дома</p>
+            <input name="house_number" type="text">
+
+            <p>Номер квартиры</p>
+            <input name="apartment_number" type="text">
+
+            <p>Широта</p>
+            <input name="latitude" type="text">
+
+            <p>Долгота</p>
+            <input name="longitude" type="text">
+
+            <p>Этаж</p>
+            <input name="floor" type="text">
+
+            <p>Количество комнат</p>
+            <input name="number_of_rooms" type="text">
+
+            <p>Площадь</p>
+            <input name="square"  type="text">
+
+            <p>Тип</p>
+            <input name="type" type="text" value="apartment">
+
+            <button type="submit">Создать</button>
+        </form>
+    </div>
+ 
+
+{% endblock %}

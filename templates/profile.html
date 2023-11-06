@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}<link type="text/css" rel="stylesheet" href="{% static 'mainapp/css/profile.css' %}">{% endblock style %}
+
+{% block content %}
+
+    <h2 class="heading__profile">Страница пользователя</h2>
+
+    <div class="container__profile"> 
+
+        <p>
+            Пользователь: {{user}}
+        </p>
+
+        {% if user.nickname %}
+            <p>
+                Ник: {{user.nickname}}
+            </p>    
+        {% endif %}
+
+        {% if user.last_name %}
+            <p>
+                Фамилия: {{user.last_name}}
+            </p> 
+        {% endif %}
+
+        {% if user.first_name %}
+            <p>
+                Имя: {{user.first_name}}
+            </p>
+        {% endif %}
+
+        {% if user.middle_name %}
+            <p>
+                Отчество: {{user.middle_name}}
+            </p>
+        {% endif %}
+
+        {% if user.email %}
+            <p>
+                Почта: {{user.email}}
+            </p>
+        {% endif %}
+
+        {% if user.phone_number %}
+            <p>
+                Телефон: {{user.phone_number}}
+            </p>
+        {% endif %}
+
+        {% if user.comission %}
+            <p>
+                Комиссия: {{user.comission}}
+            </p>
+        {% endif %}
+
+
+        <button id="editUserBtn">
+            Редактировать аккаунт
+        </button>
+
+        <button>
+            Удалить аккаунт
+        </button>
+    </div>
+
+    <!-- Модальное окно для изменения пользователя -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h3 class="admin-home__heading">Редактировать пользователя</h3>
+            <hr>
+            {% if form.errors %}
+                <p>{{form.errors.error}}</p>
+            {% endif %}
+
+            <form action="{% url 'profile' %}" method="post" class="userEditForm">
+                {{form}}
+                {% csrf_token %}
+
+                <p>
+                    Пользователь: {{user}}
+                </p>
+
+                <input name="editId" type="text" value="{{user.id}}" class="hidden"> 
+
+                {% if user.nickname %}
+                    <p>Ник: </p> 
+                    <input name="editNickname" type="text" value="{{user.nickname}}"> 
+                {% endif %}
+
+                {% if user.last_name %}
+                    <p>Фамилия:</p>
+                    <input name="editLastName" type="text" value="{{user.last_name}}"> 
+                {% endif %}
+
+                {% if user.first_name %}
+                    <p>Имя:</p>
+                    <input name="editFirstName" type="text" value="{{user.first_name}}"> 
+                {% endif %}
+
+                {% if user.middle_name %}
+                    <p>Отчество:</p>
+                    <input name="editMiddleName" type="text" value="{{user.middle_name}}"> 
+                {% endif %}
+
+                {% if user.email %}
+                    <p>Почта: </p>
+                    <input name="editEmail" type="email" value="{{user.email}}"> 
+                {% endif %}
+
+                {% if user.phone_number %}
+                    <p>Телефон: </p>
+                    <input name="editPhone" type="tel" value="{{user.phone_number}}"> 
+                {% endif %}
+
+                {% if user.comission %}
+                    <p>Комиссия: </p>
+                    <input name="editCommission" type="number" value="{{user.commission}}"> 
+                {% endif %}
+
+                <button class="btnSaveUser" type="submit">Сохранить</button>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('editUserBtn').addEventListener('click', function() {
+            document.getElementById('editUserModal').style.display = 'block';
+        });
+
+        // Закрыть модальное окно
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('editUserModal').style.display = 'none';
+        });
+
+    </script>
+
+
+{% endblock %}

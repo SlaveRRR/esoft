@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Выберите тип недвижимости, который хотите создать:</h1>
+    
+    <hr>
+
+    <div> 
+        <a href="{% url 'create_an_apartment'%}">
+            Квартира
+        </a>
+
+        <hr>
+
+        <a href="{% url 'create_a_house' %}">
+            Дом
+        </a>
+
+        <hr>
+        
+        <a href="{% url 'create_land' %}">
+            Земля
+        </a>
+    </div>
+ 
+
+{% endblock %}

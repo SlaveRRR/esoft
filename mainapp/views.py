@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import ClientRegistrationForm, RealtorRegistrationForm
-from mainapp.models import User
+from mainapp.models import User, RealEstate
 from django.contrib.auth.hashers import make_password
 
 def client_registration(request):
@@ -101,3 +101,93 @@ def home(request):
         return render(request, 'home.html', context)
     
     return render(request, 'home.html')
+
+
+# @login_required
+def profile(request):
+    #обработка изменения пользователя
+    if request.method == 'POST':
+
+        user_id = request.POST.get('editId')
+        user_id = int(user_id)
+        user = User.objects.get(pk=user_id)
+
+        user.nickname = request.POST.get('editNickname')
+        user.last_name = request.POST.get('editLastName')
+        user.first_name = request.POST.get('editFirstName')
+        user.middle_name = request.POST.get('editMiddleName')
+        user.email = request.POST.get('editEmail')
+        user.phone_number = request.POST.get('editPhone')
+        user.commission = request.POST.get('editCommission')
+
+        user.save()
+
+    return render(request, 'profile.html')
+
+
+def real_estate(request):
+    return render(request, 'real_estate.html')
+
+
+def create_an_apartment(request):
+
+    if request.method == 'POST':
+        newApartment= RealEstate()
+        
+        newApartment.heading = request.POST.get('heading')
+        newApartment.city = request.POST.get('city')
+        newApartment.street = request.POST.get('street')
+        newApartment.house_number = request.POST.get('house_number')
+        newApartment.apartment_number = request.POST.get('apartment_number')
+        newApartment.latitude = request.POST.get('latitude')
+        newApartment.longitude = request.POST.get('longitude')
+        newApartment.floor = request.POST.get('floor')
+        newApartment.number_of_rooms = request.POST.get('number_of_rooms')
+        newApartment.square = request.POST.get('square')
+        newApartment.type = request.POST.get('type')
+
+        newApartment.save()
+
+    return render(request, 'create_an_apartment.html')
+
+
+def create_a_house(request):
+
+    if request.method == 'POST':
+        newHouse= RealEstate()
+
+        newHouse.heading = request.POST.get('heading')
+        newHouse.city = request.POST.get('city')
+        newHouse.street = request.POST.get('street')
+        newHouse.house_number = request.POST.get('house_number')
+        newHouse.apartment_number = request.POST.get('apartment_number')
+        newHouse.latitude = request.POST.get('latitude')
+        newHouse.longitude = request.POST.get('longitude')
+        newHouse.number_of_floors = request.POST.get('floor')
+        newHouse.number_of_rooms = request.POST.get('number_of_rooms')
+        newHouse.square = request.POST.get('square')
+        newHouse.type = request.POST.get('type')
+
+        newHouse.save()
+
+    return render(request, 'create_a_house.html')
+
+
+def create_land(request):
+
+    if request.method == 'POST':
+        newLand = RealEstate()
+
+        newLand.heading = request.POST.get('heading')
+        newLand.city = request.POST.get('city')
+        newLand.street = request.POST.get('street')
+        newLand.house_number = request.POST.get('house_number')
+        newLand.apartment_number = request.POST.get('apartment_number')
+        newLand.latitude = request.POST.get('latitude')
+        newLand.longitude = request.POST.get('longitude')
+        newLand.square = request.POST.get('square')
+        newLand.type = request.POST.get('type')
+
+        newLand.save()
+
+    return render(request, 'create_land.html')
