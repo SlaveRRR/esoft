@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Регистрация</h1>
+    
+    <hr>
+
+    <div> 
+        <li>
+            <a href="{% url 'realtor_registration' %}">Регистрация риэлтора</a>
+        </li>
+
+        <li>
+            <a href="{% url 'client_registration' %}">Регистрация клиента</a>
+        </li>
+    </div>
+
+    <hr>
+
+    
+ 
+
+{% endblock %}

@@ -48,7 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class RealEstate(models.Model):
     id = models.AutoField(primary_key=True)
-    heading = models.CharField(max_length=255, null=True)
+    heading = models.CharField(max_length=255, default=1)
     type = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=255, null=True)
     street = models.CharField(max_length=255, null=True)

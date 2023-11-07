@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from .forms import ClientRegistrationForm, RealtorRegistrationForm
-from mainapp.models import User, RealEstate
+from mainapp.models import User, RealEstate, User_Real_estate
 from django.contrib.auth.hashers import make_password
+
+
+def registration(request):
+    return render(request, 'registration.html')
 
 def client_registration(request):
     if request.method == 'POST':
@@ -73,6 +77,18 @@ def search_fio(last_name, first_name, middle_name, target_last_name, target_firs
         return True # пользователя на котором True -> заносим в итоговый вывод
     else:
         return False
+
+def search_real_estates(city, street, target_city, target_street):
+    distance_city = levenshtein_distance(city, target_city)
+    distance_street = levenshtein_distance(street, target_street)
+
+    if (
+        distance_city <=3
+        and distance_street <=3
+    ):
+        return True
+    else: 
+        return False
     
 
 def home(request):
@@ -80,49 +96,118 @@ def home(request):
     target_first_name = ''
     target_middle_name = ''
 
+    target_city = ''
+    target_street = ''
+
+    selected_type = request.GET.get('type')
+    selected_city = request.GET.get('city')
+    
+    all_real_estates = RealEstate.objects.all()
+
+    if selected_type and selected_type != '0':
+        all_real_estates = all_real_estates.filter(type=selected_type)
+
+    if selected_city and selected_city != '0':
+        all_real_estates = all_real_estates.filter(city=selected_city)
+
+
+    context = {'all_real_estates': all_real_estates}
+
+
     if request.method == 'POST':
-        fio = request.POST.get('query') # получаем фио из формы
-        fio_parts = fio.split(' ') # ['Иванов', 'Петр', 'Сергеевич']
+        action = request.POST.get('action')
+
+        if action == 'search_fio':
+            fio = request.POST.get('query') # получаем фио из формы
+            fio_parts = fio.split(' ') # ['Иванов', 'Петр', 'Сергеевич']
+            
+            target_last_name = fio_parts[0] #иванов
+            target_first_name = fio_parts[1] #петр
+            target_middle_name = fio_parts[2] #сергеевич
+
+            users = User.objects.all()
         
-        target_last_name = fio_parts[0] #иванов
-        target_first_name = fio_parts[1] #петр
-        target_middle_name = fio_parts[2] #сергеевич
+            usersFinal = []
 
-        users = User.objects.all()
-    
-        usersFinal = []
+            for user in users:
+                if search_fio(user.last_name, user.first_name, user.middle_name, target_last_name, target_first_name, target_middle_name):
+                    usersFinal.append(f"Найден клиент: {user.last_name} {user.first_name} {user.middle_name}")
+            
+            context = {'users':usersFinal}
 
-        for user in users:
-            if search_fio(user.last_name, user.first_name, user.middle_name, target_last_name, target_first_name, target_middle_name):
-                usersFinal.append(f"Найден клиент: {user.last_name} {user.first_name} {user.middle_name}")
+            return render(request, 'home.html', context)
         
-        context = {'users':usersFinal}
+        if action == 'search_real_estate':
+            address = request.POST.get('search_real_state') 
+            address_parts = address.split(' ') # ['Город', 'Улица']
+            
+            target_city = address_parts[0] 
+            target_street = address_parts[1] 
 
-        return render(request, 'home.html', context)
+            real_estates = RealEstate.objects.all()
+
+            real_estates_final = []
+
+            for real_estate in real_estates:
+                if search_real_estates(real_estate.city, real_estate.street, target_city, target_street):
+                    real_estates_final.append(f"Найдена недвижимость: {real_estate.heading}")
+            
+            context = {'real_estates':real_estates_final}
+
+            return render(request, 'home.html', context)
     
-    return render(request, 'home.html')
+    return render(request, 'home.html', context)
 
 
 # @login_required
 def profile(request):
-    #обработка изменения пользователя
+
     if request.method == 'POST':
+        action = request.POST.get('action')
 
-        user_id = request.POST.get('editId')
-        user_id = int(user_id)
-        user = User.objects.get(pk=user_id)
+        if action == 'change_user':
+            user_id = request.POST.get('editId')
+            user_id = int(user_id)
+            user = User.objects.get(pk=user_id)
+            user.nickname = request.POST.get('editNickname')
+            user.last_name = request.POST.get('editLastName')
+            user.first_name = request.POST.get('editFirstName')
+            user.middle_name = request.POST.get('editMiddleName')
+            user.email = request.POST.get('editEmail')
+            user.phone_number = request.POST.get('editPhone')
+            user.commission = request.POST.get('editCommission')
+            user.save()
 
-        user.nickname = request.POST.get('editNickname')
-        user.last_name = request.POST.get('editLastName')
-        user.first_name = request.POST.get('editFirstName')
-        user.middle_name = request.POST.get('editMiddleName')
-        user.email = request.POST.get('editEmail')
-        user.phone_number = request.POST.get('editPhone')
-        user.commission = request.POST.get('editCommission')
+        if action == 'change_real_estate':
+            id = request.POST.get('id')
+            real_estate = RealEstate.objects.get(pk=id) #изменяемый объект
+            real_estate.heading = request.POST.get('heading')
+            real_estate.city = request.POST.get('city')
+            real_estate.street = request.POST.get('street')
+            real_estate.house_number = request.POST.get('house_number')
+            real_estate.apartment_number = request.POST.get('apartment_number')
+            real_estate.latitude = request.POST.get('latitude')
+            real_estate.longitude = request.POST.get('longitude')
+            real_estate.floor = request.POST.get('floor')
+            real_estate.floor = request.POST.get('number_of_floors')
+            real_estate.number_of_rooms = request.POST.get('number_of_rooms')
+            real_estate.square = request.POST.get('square')
+            real_estate.type = request.POST.get('type')
+            real_estate.save()
+        
+    context = {}
 
-        user.save()
+    user_real_estates = User_Real_estate.objects.filter(user_id=request.user.id) #объекты юзер_недвижимости конкретного юзера {id, user_id, real_estate_id}
+    real_estates = []
 
-    return render(request, 'profile.html')
+    for index in user_real_estates: 
+        new_real_estates = RealEstate.objects.get(pk=index.user_real_estate_id)
+        real_estates.append(new_real_estates)
+
+    context['real_estates'] = real_estates #массив (объектов) недвижек конкретного юзера
+
+    return render(request, 'profile.html', context)
+
 
 
 def real_estate(request):
@@ -133,7 +218,6 @@ def create_an_apartment(request):
 
     if request.method == 'POST':
         newApartment= RealEstate()
-        
         newApartment.heading = request.POST.get('heading')
         newApartment.city = request.POST.get('city')
         newApartment.street = request.POST.get('street')
@@ -145,8 +229,14 @@ def create_an_apartment(request):
         newApartment.number_of_rooms = request.POST.get('number_of_rooms')
         newApartment.square = request.POST.get('square')
         newApartment.type = request.POST.get('type')
-
         newApartment.save()
+
+        newuser_real_estate_object = User_Real_estate()
+        user_id = User.objects.get(pk=request.user.id)
+        newuser_real_estate_object.user_id = user_id
+        newuser_real_estate_object.user_real_estate = newApartment
+        newuser_real_estate_object.save()
+
 
     return render(request, 'create_an_apartment.html')
 
@@ -155,7 +245,6 @@ def create_a_house(request):
 
     if request.method == 'POST':
         newHouse= RealEstate()
-
         newHouse.heading = request.POST.get('heading')
         newHouse.city = request.POST.get('city')
         newHouse.street = request.POST.get('street')
@@ -167,8 +256,13 @@ def create_a_house(request):
         newHouse.number_of_rooms = request.POST.get('number_of_rooms')
         newHouse.square = request.POST.get('square')
         newHouse.type = request.POST.get('type')
-
         newHouse.save()
+
+        newuser_real_estate_object = User_Real_estate()
+        user_id = User.objects.get(pk=request.user.id)
+        newuser_real_estate_object.user_id = user_id
+        newuser_real_estate_object.user_real_estate = newHouse
+        newuser_real_estate_object.save()
 
     return render(request, 'create_a_house.html')
 
@@ -177,7 +271,6 @@ def create_land(request):
 
     if request.method == 'POST':
         newLand = RealEstate()
-
         newLand.heading = request.POST.get('heading')
         newLand.city = request.POST.get('city')
         newLand.street = request.POST.get('street')
@@ -187,7 +280,12 @@ def create_land(request):
         newLand.longitude = request.POST.get('longitude')
         newLand.square = request.POST.get('square')
         newLand.type = request.POST.get('type')
-
         newLand.save()
+
+        newuser_real_estate_object = User_Real_estate()
+        user_id = User.objects.get(pk=request.user.id)
+        newuser_real_estate_object.user_id = user_id
+        newuser_real_estate_object.user_real_estate = newLand
+        newuser_real_estate_object.save()
 
     return render(request, 'create_land.html')

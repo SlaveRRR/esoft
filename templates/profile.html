@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <h2 class="heading__profile">Страница пользователя</h2>
+    <h1 class="heading__profile">Страница пользователя</h1>
 
     <div class="container__profile"> 
 
@@ -121,10 +121,88 @@
                     <input name="editCommission" type="number" value="{{user.commission}}"> 
                 {% endif %}
 
-                <button class="btnSaveUser" type="submit">Сохранить</button>
+                <button class="btnSaveUser" type="submit" name="action" value="change_user">Сохранить</button>
 
             </form>
         </div>
+    </div>
+
+    <div>
+        <h2 class="heading__profile">Моя недвижимость</h2>
+
+        <ul>
+            {% for real_estate in real_estates %}
+                <form action="{% url 'profile' %}" method="post">
+                    {% csrf_token %}
+                    
+                    <input name="id" type="text" value="{{real_estate.id}}" style="visibility: hidden;">
+
+                    <input name="heading" type="text" value="{{real_estate.heading}}">
+
+                    {% if real_estate.type %}
+                        <p>Тип</p>
+                        <input name="type" type="text" value="{{real_estate.type}}">
+                    {% endif %}
+
+                    {% if real_estate.city %}
+                        <p>Город</p>
+                        <input name="city" type="text" value="{{real_estate.city}}">
+                    {% endif %}
+
+                    {% if real_estate.street %}
+                        <p>Улица</p>
+                        <input name="street" type="text" value="{{real_estate.street}}">
+                    {% endif %}
+
+                    {% if real_estate.house_number %}
+                        <p>Номер дома</p>
+                        <input name="house_number" type="text" value="{{real_estate.house_number}}">
+                    {% endif %}
+
+                    {% if real_estate.apartment_number %}
+                        <p>Номер квартиры</p>
+                        <input name="apartment_number" type="text" value="{{real_estate.apartment_number}}">
+                    {% endif %}
+
+                    {% if real_estate.latitude %}
+                        <p>Широта</p>
+                        <input name="latitude" type="text" value="{{real_estate.latitude}}">
+                    {% endif %}
+
+                    {% if real_estate.longitude %}
+                        <p>Долгота</p>
+                        <input name="longitude" type="text" value="{{real_estate.longitude}}">
+                    {% endif %}
+
+                    {% if real_estate.floor %}
+                        <p>Этаж</p>
+                        <input name="floor" type="text" value="{{real_estate.floor}}">
+                    {% endif %}
+
+                    {% if real_estate.number_of_floors %}
+                        <p>Этажность</p>
+                        <input name="number_of_floors" type="text" value="{{real_estate.number_of_floors}}">
+                    {% endif %}
+
+                    {% if real_estate.number_of_rooms %}
+                        <p>Количество комнат</p>
+                        <input name="number_of_rooms" type="text" value="{{real_estate.number_of_rooms}}">
+                    {% endif %}
+
+                    {% if real_estate.square %}
+                        <p>Площадь</p>
+                        <input name="square" type="text" value="{{real_estate.square}}">
+                    {% endif %}
+
+                    <button type="submit" name="action" value="change_real_estate">Сохранить изменения</button>
+                </form>
+
+                <hr>
+            {% empty %}
+                <p>недвижимость пока не добавлена</p>
+            {% endfor %}
+            
+        </ul>
     </div>
 
     <script>

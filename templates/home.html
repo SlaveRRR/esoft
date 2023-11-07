@@ -12,9 +12,9 @@
         <form method="post" action="{% url 'home' %}">
             {% csrf_token %}
 
-            <input type="text" name="query" placeholder="Введите ФИО" >
+            <input type="text" name="query" placeholder="Искать ФИО" >
 
-            <button type="submit" class="btn_home">Искать</button>
+            <button name="action" value="search_fio" type="submit" class="btn_home">Искать</button>
         </form>
     </div>
  
@@ -23,5 +23,85 @@
     {% empty %}
         <p>Результаты не найдены</p>
     {% endfor %}
+
+    <hr>
+
+    <div class="search__home"> 
+        <form method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+
+            <input type="text" name="search_real_state" placeholder="Искать недвижимость" >
+
+            <button name="action" value="search_real_estate" type="submit" class="btn_home">Искать</button>
+        </form>
+    </div>
+ 
+    {% for real_estate in real_estates %}
+        {{real_estate}}
+    {% empty %}
+        <p>Результаты не найдены</p>
+    {% endfor %}
+
+    <hr>
+    <!-- тип и адрес(город) -->
+    <select name="type_select" id="type_select"> 
+        <option value="apartment" style="display: none;">Квартира</option>
+        <option value="apartment">Квартира</option>
+        <option value="house">Дом</option>
+        <option value="land">Земля</option>
+    </select>
+
+    <select name="city_select" id="city_select"> 
+        <option value="Москва"  style="display: none;">Москва</option>
+        <option value="Москва">Москва</option>
+        <option value="Дмитров">Дмитров</option>
+        <option value="Минск">Минск</option>
+    </select>
+
+    <button id="btn_filter">Применить фильтры</button>
+
+    <hr>
+
+    {% for real_estate in all_real_estates %}
+        <p>
+            {{real_estate.heading}}
+        </p>
+
+        <p>
+            {{real_estate.city}}
+        </p>
+
+        <p>
+            {{real_estate.street}}
+        </p>
+
+        <hr>
+    {% endfor %}
+
+    <script>
+        function applyFilters() {
+            var typeSelect = document.getElementById('type_select').value;
+            var citySelect = document.getElementById('city_select').value;
+
+            var queryParams = [];
+        
+            if (typeSelect) {
+                queryParams.push('type=' + typeSelect);
+            }
+        
+            if (citySelect) {
+                queryParams.push('city=' + citySelect);
+            }
+
+            var queryString = queryParams.join('&');
+            var newURL = window.location.pathname + '?' + queryString;
+        
+            window.location.href = newURL;
+        }
+        
+
+        document.getElementById('btn_filter').addEventListener('click', applyFilters);
+
+    </script>
 
 {% endblock %}
