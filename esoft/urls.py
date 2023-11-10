@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land
+from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land, logout_user, offers, create_offer, create_demand
 
 urlpatterns = [
     path("admin/", admin.site.urls),
 
     path('registration/', registration, name='registration'),
+
+    path('logout/', logout_user, name='logout'),
 
     path('client_registration/', client_registration, name='client_registration'),
 
@@ -30,7 +32,7 @@ urlpatterns = [
 
     path('profile/', profile, name='profile'),
 
-    path('home/', home, name='home'),
+    path('', home, name='home'),
     
     path('real_estate/', real_estate, name='real_estate'),
 
@@ -39,5 +41,11 @@ urlpatterns = [
     path('create_a_house/', create_a_house, name='create_a_house'),
 
     path('create_land/', create_land, name='create_land'),
+
+    path('offers/', offers, name='offers'),
+
+    path('create_offer/', create_offer, name='create_offer'),
+
+    path('create_demand/', create_demand, name='create_demand'),
 
 ]

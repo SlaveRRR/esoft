@@ -127,8 +127,19 @@
         </div>
     </div>
 
+
     <div>
         <h2 class="heading__profile">Моя недвижимость</h2>
+
+        <hr>
+
+        <a href="{% url 'create_offer' %}">Создать предложение недвижимости</a>
+
+        <hr>
+
+        <a href="{% url 'create_demand' %}">Создать потребность</a>
+
+        <hr>
 
         <ul>
             {% for real_estate in real_estates %}
@@ -204,6 +215,166 @@
             
         </ul>
     </div>
+
+
+    <hr>
+
+
+    <div>
+        <h2 class="heading__profile">Мои предложения</h2>
+
+        <hr>
+
+        <ul>
+            {% for offer in offers %}
+                <form action="{% url 'profile' %}" method="post">
+                    {% csrf_token %}
+
+                    <input name="id" type="text" value="{{offer.id}}" style="visibility: hidden;">
+
+                    {% if offer.price %}
+                        <p>Цена</p>
+                        <input name="price" type="text" value="{{offer.price}}">
+                    {% endif %}
+
+                    {% if offer.real_estate_id %}
+                        <p>Изменить недвижимость на :</p>
+                        <select name="select-real-estates" id="select-real-estates">
+                            {% for real_estate in real_estates %}
+                                {% if offer.real_estate.heading == real_estate.heading %}
+                                    <option value="{{real_estate.id}}" selected="selected">
+                                        {{real_estate.heading}}
+                                    </option>
+                                {% else %}
+                                    <option value="{{real_estate.id}}">
+                                        {{real_estate.heading}}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+
+
+                    {% if offer.real_estate_id %}
+                        <p>Изменить риэлтора на :</p>
+                        <select name="select-realtor" id="select-realtor">
+                            {% for realtor in realtors %}
+                                {% if offer.rieltor.nickname == realtor.nickname %}
+                                    <option value="{{realtor.id}}" selected="selected">
+                                        {{realtor.nickname}}
+                                    </option>
+                                {% else %}
+                                    <option value="{{realtor.id}}">
+                                        {{realtor.nickname}}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+
+                    <button type="submit" name="action" value="change_offer">Сохранить изменения</button>
+                </form>
+
+                <hr>
+            {% empty %}
+                <p>У вас пока нет предложений</p>
+            {% endfor %}
+            
+        </ul>
+    </div>
+
+    
+    <hr>
+
+
+    <div>
+        <h2 class="heading__profile">Мои потребности</h2>
+
+        <hr>
+
+        <ul>
+            {% for demand in demands %}
+                <form action="{% url 'profile' %}" method="post">
+                    {% csrf_token %}
+
+                    <input name="id" type="text" value="{{demand.id}}" style="visibility: hidden;">
+
+                    {% if demand.rieltor %}
+                        <p>Риэлтор</p>
+                        <input name="realtor" type="text" value="{{demand.rieltor.nickname}}">
+                    {% endif %}
+
+                    {% if demand.type %}
+                        <p>Тип недвижимости</p>
+                        <input name="type" type="text" value="{{demand.type}}">
+                    {% endif %}
+
+                    {% if demand.address %}
+                        <p>Адрес</p>
+                        <input name="address" type="text" value="{{demand.address}}">
+                    {% endif %}
+
+                    {% if demand.min_price %}
+                        <p>Мин цена</p>
+                        <input name="min_price" type="text" value="{{demand.min_price}}">
+                    {% endif %}
+
+                    {% if demand.max_price %}
+                        <p>Макс цена</p>
+                        <input name="max_price" type="text" value="{{demand.max_price}}">
+                    {% endif %}
+
+                    {% if demand.min_square %}
+                        <p>Мин площадь</p>
+                        <input name="min_square" type="text" value="{{demand.min_square}}">
+                    {% endif %}
+
+                    {% if demand.max_square %}
+                        <p>Макс площадь</p>
+                        <input name="max_square" type="text" value="{{demand.max_square}}">
+                    {% endif %}
+
+                    {% if demand.min_number_of_rooms %}
+                        <p>Мин количество комнат</p>
+                        <input name="min_number_of_rooms" type="text" value="{{demand.min_number_of_rooms}}">
+                    {% endif %}
+
+                    {% if demand.max_number_of_rooms %}
+                        <p>Макс количество комнат</p>
+                        <input name="max_number_of_rooms" type="text" value="{{demand.max_number_of_rooms}}">
+                    {% endif %}
+
+                    {% if demand.min_floor %}
+                        <p>Мин этаж</p>
+                        <input name="min_floor" type="text" value="{{demand.min_floor}}">
+                    {% endif %}
+
+                    {% if demand.max_floor %}
+                        <p>Макс этаж</p>
+                        <input name="max_floor" type="text" value="{{demand.max_floor}}">
+                    {% endif %}
+
+                    {% if demand.min_number_of_floors %}
+                        <p>Мин количество этажей</p>
+                        <input name="min_number_of_floors" type="text" value="{{demand.min_number_of_floors}}">
+                    {% endif %}
+
+                    {% if demand.max_number_of_floors %}
+                        <p>Макс количество этажей</p>
+                        <input name="max_number_of_floors" type="text" value="{{demand.max_number_of_floors}}">
+                    {% endif %}
+
+                    <button type="submit" name="action" value="change_demand">Сохранить изменения</button>
+                </form>
+
+                <hr>
+            {% empty %}
+                <p>У вас пока нет потребностей</p>
+            {% endfor %}
+            
+        </ul>
+    </div>
+
 
     <script>
         document.getElementById('editUserBtn').addEventListener('click', function() {

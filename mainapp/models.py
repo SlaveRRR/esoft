@@ -43,9 +43,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = []
 
-    def __str__(self):
-        return self.nickname
-
 class RealEstate(models.Model):
     id = models.AutoField(primary_key=True)
     heading = models.CharField(max_length=255, default=1)
@@ -64,3 +61,25 @@ class RealEstate(models.Model):
 class User_Real_estate(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     user_real_estate = models.ForeignKey(RealEstate, on_delete=models.CASCADE)
+
+class Offers(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name="client")
+    rieltor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rieltor")
+    real_estate = models.ForeignKey(RealEstate, on_delete=models.CASCADE) #уже существ недвижка
+    price = models.CharField(max_length=255)
+
+class Demand(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name="clientindemand")
+    rieltor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rieltorindemand")
+    type = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    min_price = models.CharField(max_length=255)
+    max_price = models.CharField(max_length=255)
+    min_square = models.CharField(max_length=255)
+    max_square = models.CharField(max_length=255)
+    min_number_of_rooms = models.CharField(max_length=255, null=True)
+    max_number_of_rooms = models.CharField(max_length=255, null=True)
+    min_floor = models.CharField(max_length=255, null=True)
+    max_floor = models.CharField(max_length=255, null=True)
+    min_number_of_floors = models.CharField(max_length=255, null=True)
+    max_number_of_floors = models.CharField(max_length=255, null=True)

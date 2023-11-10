@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Создать предложение недвижимости</h1>
+    
+    <hr>
+
+    <div> 
+        <form action="{% url 'create_offer' %}" method="post">
+            {% csrf_token %}
+
+            <p>Выберите риэлтора</p>
+            <select name="select-realtor" id="select-realtor">
+                {% for realtor in realtors %}
+                    <option value="{{realtor.id}}">
+                        {{realtor.nickname}}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <p>Выберите недвижимость</p>
+            <select name="select-real-estates" id="select-real-estates">
+                {% for real_estate in real_estates %}
+                    <option value="{{real_estate.id}}">
+                        {{real_estate.heading}}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <p>Введите цену</p>
+            
+            <input type="number" name="price">
+
+            <button type="submit">Создать предложение</button>
+        </form>
+    </div>
+ 
+
+{% endblock %}

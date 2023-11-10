@@ -30,6 +30,8 @@ ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'mainapp.User'
 
+LOGIN_REDIRECT_URL = '/profile/'
+
 APPEND_SLASH=False
 # Application definition
 

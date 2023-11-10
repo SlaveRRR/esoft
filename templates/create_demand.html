@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Создание потребность</h1>
+    
+    <hr>
+
+    <div> 
+        <form action="{% url 'create_demand' %}" method="post">
+            {% csrf_token %}
+
+            <p>Выберите риэлтора</p>
+            <select name="select-realtor" id="select-realtor">
+                {% for realtor in realtors %}
+                    <option value="{{realtor.id}}">
+                        {{realtor.nickname}}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <p>Выберите тип недвижимости</p>
+            <select name="select-type" id="select-type">
+                <option value="apartment">
+                    Квартира
+                </option>
+                <option value="house">
+                    Дом
+                </option>
+                <option value="land">
+                    Земля
+                </option>
+            </select>
+
+            <p>Введите адрес</p>
+            <input type="text" name="address">
+
+            <p>Введите мин цену</p>
+            <input type="text" name="min-price">
+
+            <p>Введите макс цену</p>
+            <input type="text" name="max-price">
+
+            <p>Введите мин площадь</p>
+            <input type="text" name="min-square">
+
+            <p>Введите макс площадь</p>
+            <input type="text" name="max-square">
+
+            <p>Введите мин количество комнат</p>
+            <input type="text" name="min-number-of-rooms" placeholder="поле необязательно">
+
+            <p>Введите макс количество комнат</p>
+            <input type="text" name="max-number-of-rooms" placeholder="поле необязательно">
+
+            <p>Введите мин этаж</p>
+            <input type="text" name="min-floor" placeholder="поле необязательно">
+
+            <p>Введите макс этаж</p>
+            <input type="text" name="max-floor" placeholder="поле необязательно">
+
+            <p>Введите мин количество этажей</p>
+            <input type="text" name="min-number-of-floors" placeholder="поле необязательно">
+
+            <p>Введите макс количество этажей</p>
+            <input type="text" name="max-number-of-floors" placeholder="поле необязательно">
+
+
+            <button type="submit">Создать потребность</button>
+        </form>
+    </div>
+ 
+
+{% endblock %}

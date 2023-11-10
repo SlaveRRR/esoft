@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import ClientRegistrationForm, RealtorRegistrationForm
-from mainapp.models import User, RealEstate, User_Real_estate
+from mainapp.models import User, RealEstate, User_Real_estate, Offers, Demand
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import logout
 
 
 def registration(request):
@@ -41,6 +42,11 @@ def realtor_registration(request):
     else:
         return render(request, 'realtor_registration.html')
     return render(request, 'realtor_registration.html')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
 
 
 def levenshtein_distance(s1, s2): # передаем текущее из User all() и искомое имя/фам/отч
@@ -194,6 +200,31 @@ def profile(request):
             real_estate.square = request.POST.get('square')
             real_estate.type = request.POST.get('type')
             real_estate.save()
+
+        if action == 'change_offer':
+            id = request.POST.get('id')
+            offer = Offers.objects.get(pk=id) #изменяемый объект
+            offer.price = request.POST.get('price')
+            offer.real_estate_id = request.POST.get('select-real-estates') #селектом
+            offer.rieltor_id = request.POST.get('select-realtor') #селектом
+            offer.save()
+
+        if action == 'change_demand':
+            id = request.POST.get('id')
+            demand = Demand.objects.get(pk=id) #изменяемый объект
+            demand.type = request.POST.get('type')
+            demand.address = request.POST.get('address')
+            demand.min_price = request.POST.get('min_price')
+            demand.max_price = request.POST.get('max_price')
+            demand.min_square = request.POST.get('min_square')
+            demand.max_square = request.POST.get('max_square')
+            demand.min_number_of_rooms = request.POST.get('min_number_of_rooms')
+            demand.max_number_of_rooms = request.POST.get('max_number_of_rooms')
+            demand.min_floor = request.POST.get('min_floor')
+            demand.max_floor = request.POST.get('max_floor')
+            demand.min_number_of_floors = request.POST.get('min_number_of_floors')
+            demand.max_number_of_floors = request.POST.get('max_number_of_floors')
+            demand.save()
         
     context = {}
 
@@ -204,10 +235,22 @@ def profile(request):
         new_real_estates = RealEstate.objects.get(pk=index.user_real_estate_id)
         real_estates.append(new_real_estates)
 
+
+    #Список предложений конкретного пользователя
+    offers = Offers.objects.filter(client_id=request.user.id)
+
+    #Список потребностей конкретного пользователя
+    demands = Demand.objects.filter(client_id=request.user.id)
+
+    #Список риэлторов
+    realtors = User.objects.filter(is_realtor=1)
+
+    context['offers'] = offers #массив предложений
     context['real_estates'] = real_estates #массив (объектов) недвижек конкретного юзера
+    context['demands'] = demands
+    context['realtors'] = realtors
 
     return render(request, 'profile.html', context)
-
 
 
 def real_estate(request):
@@ -289,3 +332,57 @@ def create_land(request):
         newuser_real_estate_object.save()
 
     return render(request, 'create_land.html')
+
+
+def offers(request):
+    return render(request, 'offers.html')
+
+
+def create_offer(request):
+    if request.method == 'POST':
+        newOffer = Offers()
+        newOffer.price = request.POST.get('price')
+        newOffer.client_id = request.user.id
+        newOffer.real_estate_id = request.POST.get('select-real-estates')
+        newOffer.rieltor_id = request.POST.get('select-realtor')
+        newOffer.save()
+
+    #Список риэлторов
+    realtors = User.objects.filter(is_realtor=1)
+
+    #Список недвижек конкретного пользователя 
+    user_real_estates = User_Real_estate.objects.filter(user_id=request.user.id) #объекты юзер_недвижимости конкретного юзера {id, user_id, real_estate_id}
+    real_estates = []
+    for index in user_real_estates: 
+        new_real_estate = RealEstate.objects.get(pk=index.user_real_estate_id)
+        real_estates.append(new_real_estate)
+
+
+
+    context = {'realtors': realtors, 'real_estates': real_estates}
+    return render(request, 'create_offer.html', context)
+
+def create_demand(request):
+    if request.method == 'POST':
+        newDemand = Demand()
+        newDemand.client_id = request.user.id
+        newDemand.rieltor_id = request.POST.get('select-realtor')
+        newDemand.type = request.POST.get('select-type')
+        newDemand.address = request.POST.get('address')
+        newDemand.min_price = request.POST.get('min-price')
+        newDemand.max_price = request.POST.get('max-price')
+        newDemand.min_square = request.POST.get('min-square')
+        newDemand.max_square = request.POST.get('max-square')
+        newDemand.min_number_of_rooms = request.POST.get('min-number-of-rooms')
+        newDemand.max_number_of_rooms = request.POST.get('max-number-of-rooms')
+        newDemand.min_floor = request.POST.get('min-floor')
+        newDemand.max_floor = request.POST.get('max-floor')
+        newDemand.min_number_of_floors = request.POST.get('min-number-of-floors')
+        newDemand.max_number_of_floors = request.POST.get('max-number-of-floors')
+        newDemand.save()
+
+    #Список риэлторов
+    realtors = User.objects.filter(is_realtor=1)
+
+    context = {'realtors': realtors}
+    return render(request, 'create_demand.html', context)
