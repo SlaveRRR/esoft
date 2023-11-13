@@ -10,6 +10,12 @@
     
     <hr>
 
+    {% if alert %}
+        <p style="color: red; margin-bottom: 30px; font-size: large;">
+            {{alert}}
+        </p>
+    {% endif %}
+
     <div> 
         <form action="{% url 'create_land' %}" method="post">
             {% csrf_token %}
@@ -18,25 +24,19 @@
             <input name="heading" type="text" required>
 
             <p>Город</p>
-            <input name="city" type="text">
+            <input name="city" type="number">
 
             <p>Улица</p>
-            <input name="street" type="text">
-
-            <p>Номер дома</p>
-            <input name="house_number" type="text">
-
-            <p>Номер квартиры</p>
-            <input name="apartment_number" type="text">
+            <input name="street" type="number">
 
             <p>Широта</p>
-            <input name="latitude" type="text">
+            <input name="latitude" type="number" min="-90" max="90">
 
             <p>Долгота</p>
-            <input name="longitude" type="text">
+            <input name="longitude" type="number" min="-180" max="180">
 
             <p>Площадь</p>
-            <input name="square"  type="text">
+            <input name="square"  type="number">
 
             <p>Тип</p>
             <input name="type" type="text" value="land">

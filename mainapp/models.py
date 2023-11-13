@@ -4,6 +4,7 @@ from django.db import models
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class CustomUserManager(BaseUserManager):
@@ -51,8 +52,8 @@ class RealEstate(models.Model):
     street = models.CharField(max_length=255, null=True)
     house_number = models.CharField(max_length=255, null=True)
     apartment_number = models.CharField(max_length=255, null=True)
-    latitude = models.CharField(max_length=255, null=True)
-    longitude = models.CharField(max_length=255, null=True)
+    latitude = models.CharField(max_length=255, null=True, validators=[MinValueValidator(-90), MaxValueValidator(90)])
+    longitude = models.CharField(max_length=255, null=True, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     floor = models.CharField(max_length=255, null=True)
     number_of_floors = models.CharField(max_length=255, null=True)
     number_of_rooms = models.CharField(max_length=255, null=True)

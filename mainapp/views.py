@@ -84,13 +84,18 @@ def search_fio(last_name, first_name, middle_name, target_last_name, target_firs
     else:
         return False
 
-def search_real_estates(city, street, target_city, target_street):
+def search_real_estates(city, street, house, apartment, target_city, target_street, target_house, target_apartment):
+
     distance_city = levenshtein_distance(city, target_city)
     distance_street = levenshtein_distance(street, target_street)
+    distance_house = levenshtein_distance(house, target_house)
+    distance_apartment = levenshtein_distance(apartment, target_apartment)
 
     if (
         distance_city <=3
         and distance_street <=3
+        and distance_house <=1
+        and distance_apartment <=1
     ):
         return True
     else: 
@@ -147,22 +152,42 @@ def home(request):
         
         if action == 'search_real_estate':
             address = request.POST.get('search_real_state') 
-            address_parts = address.split(' ') # ['Город', 'Улица']
+            address_parts = address.split(' ') # ['Город', 'Улица', 'Дом', 'Квартира']
+
+            if (len(address_parts) == 4):
+                target_city = address_parts[0] 
+                target_street = address_parts[1] 
+                target_house = address_parts[2] 
+                target_apartment = address_parts[3] 
+
+                real_estates = RealEstate.objects.all()
+
+                real_estates_final = []
+
+                for real_estate in real_estates:
+                    city = real_estate.city
+                    street = real_estate.street
+                    house_number = real_estate.house_number
+                    apartment_number = real_estate.apartment_number
+
+                    if not real_estate.city:
+                        city = ''
+                    if not real_estate.street:
+                        street = ''
+                    if not real_estate.house_number:
+                        house_number = ''
+                    if not real_estate.apartment_number:
+                        apartment_number = ''
+
+                    if search_real_estates(city, street, house_number, apartment_number, target_city, target_street, target_house, target_apartment):
+                        real_estates_final.append(f"Найдена недвижимость: {real_estate.heading}, город: {real_estate.city}, улица: {real_estate.street}, дома {real_estate.house_number}, квартира {real_estate.apartment_number}\n")
+                
+                context['real_estates'] = real_estates_final
+
+                return render(request, 'home.html', context)
             
-            target_city = address_parts[0] 
-            target_street = address_parts[1] 
-
-            real_estates = RealEstate.objects.all()
-
-            real_estates_final = []
-
-            for real_estate in real_estates:
-                if search_real_estates(real_estate.city, real_estate.street, target_city, target_street):
-                    real_estates_final.append(f"Найдена недвижимость: {real_estate.heading}")
-            
-            context['real_estates'] = real_estates_final
-
-            return render(request, 'home.html', context)
+            else:
+                context['alert'] = 'Убедитесь, что вы ввели все поля (город улица дом квартира)'
     
     return render(request, 'home.html', context)
 
@@ -232,17 +257,51 @@ def profile(request):
 
         if action == 'delete-acc':
             user = User.objects.get(pk=request.user.id)
+            offers = Offers.objects.filter(client = request.user.id)
+            demands = Demand.objects.filter(client = request.user.id)
 
+            if offers or demands:
+                user.delete_value == False
+            else: 
+                user.delete_value == True
 
             if (user.delete_value == True):
                 user.delete()
-
                 return render(request, 'home.html')
             else:
                 context['alert'] = 'невозможно удалить т к у вас есть предложение или потребность'
-        
-    
 
+        if action == 'delete-real-estate': # если недвижка связана с предложением - то не удалять ее
+            id = request.POST.get('id')
+            offer = Offers.objects.filter(real_estate = id)
+            if offer:
+                context['alert'] = 'невозможно удалить т к недвижимость связана с предложением'
+            else:
+                real_estate = RealEstate.objects.get(pk=id)
+                real_estate.delete()
+                context['alert'] = 'недвижимость удалена'
+
+        if action == 'delete-offer':
+            id = request.POST.get('id')
+            deal = Deal.objects.filter(offer=id)
+            if deal:
+                context['alert'] = 'невозможно удалить т к с предложением связана сделка'
+            else:
+                offer = Offers.objects.get(pk=id)
+                offer.delete()
+                context['alert'] = 'Предложение удалено'
+
+        if action == 'delete-demand':
+            id = request.POST.get('id')
+            deal = Deal.objects.filter(demand=id)
+            if deal:
+                context['alert'] = 'невозможно удалить т к с потребностью связана сделка'
+            else:
+                demand = Demand.objects.get(pk=id)
+                demand.delete()
+                context['alert'] = 'Потребность удалена'
+        
+            
     user_real_estates = User_Real_estate.objects.filter(user_id=request.user.id) #объекты юзер_недвижимости конкретного юзера {id, user_id, real_estate_id}
     real_estates = []
 
@@ -274,6 +333,8 @@ def real_estate(request):
 
 def create_an_apartment(request):
 
+    context = {}
+
     if request.method == 'POST':
         newApartment= RealEstate()
         newApartment.heading = request.POST.get('heading')
@@ -288,6 +349,11 @@ def create_an_apartment(request):
         newApartment.square = request.POST.get('square')
         newApartment.type = request.POST.get('type')
         newApartment.save()
+        
+        if newApartment:
+            context = {'alert': 'Данные сохранены'}
+        else:
+            context = {'alert': 'Данные некорректны'}
 
         newuser_real_estate_object = User_Real_estate()
         user_id = User.objects.get(pk=request.user.id)
@@ -296,10 +362,12 @@ def create_an_apartment(request):
         newuser_real_estate_object.save()
 
 
-    return render(request, 'create_an_apartment.html')
+    return render(request, 'create_an_apartment.html', context)
 
 
 def create_a_house(request):
+
+    context = {}
 
     if request.method == 'POST':
         newHouse= RealEstate()
@@ -316,16 +384,23 @@ def create_a_house(request):
         newHouse.type = request.POST.get('type')
         newHouse.save()
 
+        if newHouse:
+            context = {'alert': 'Данные сохранены'}
+        else:
+            context = {'alert': 'Данные некорректны'}
+
         newuser_real_estate_object = User_Real_estate()
         user_id = User.objects.get(pk=request.user.id)
         newuser_real_estate_object.user_id = user_id
         newuser_real_estate_object.user_real_estate = newHouse
         newuser_real_estate_object.save()
 
-    return render(request, 'create_a_house.html')
+    return render(request, 'create_a_house.html', context)
 
 
 def create_land(request):
+
+    context = {}
 
     if request.method == 'POST':
         newLand = RealEstate()
@@ -340,13 +415,18 @@ def create_land(request):
         newLand.type = request.POST.get('type')
         newLand.save()
 
+        if newLand:
+            context = {'alert': 'Данные сохранены'}
+        else:
+            context = {'alert': 'Данные некорректны'}
+
         newuser_real_estate_object = User_Real_estate()
         user_id = User.objects.get(pk=request.user.id)
         newuser_real_estate_object.user_id = user_id
         newuser_real_estate_object.user_real_estate = newLand
         newuser_real_estate_object.save()
 
-    return render(request, 'create_land.html')
+    return render(request, 'create_land.html', context)
 
 
 def offers(request):
@@ -361,6 +441,8 @@ def create_offer(request):
         newOffer.real_estate_id = request.POST.get('select-real-estates')
         newOffer.rieltor_id = request.POST.get('select-realtor')
         newOffer.save()
+        user = User.objects.get(pk=request.user.id)
+        user.delete_value = False
 
     #Список риэлторов
     realtors = User.objects.filter(is_realtor=1)
@@ -371,7 +453,6 @@ def create_offer(request):
     for index in user_real_estates: 
         new_real_estate = RealEstate.objects.get(pk=index.user_real_estate_id)
         real_estates.append(new_real_estate)
-
 
 
     context = {'realtors': realtors, 'real_estates': real_estates}
@@ -395,6 +476,9 @@ def create_demand(request):
         newDemand.min_number_of_floors = request.POST.get('min-number-of-floors')
         newDemand.max_number_of_floors = request.POST.get('max-number-of-floors')
         newDemand.save()
+        
+        user = User.objects.get(pk=request.user.id)
+        user.delete_value = False
 
     #Список риэлторов
     realtors = User.objects.filter(is_realtor=1)

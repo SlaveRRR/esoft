@@ -8,6 +8,12 @@
 
     <h1 class="heading__profile">Страница пользователя</h1>
 
+    {% if alert %}
+        <p style="color: red; margin-bottom: 30px; font-size: large;">
+            {{alert}}
+        </p>
+    {% endif %}
+
     <div class="container__profile"> 
 
         <p>
@@ -66,12 +72,6 @@
             <button name="action" value="delete-acc" type="submit">
                 Удалить аккаунт
             </button>
-
-            {% if alert %}
-                <p style="color: red;">
-                    {{alert}}
-                </p>
-            {% endif %}
 
 
         </form>
@@ -218,6 +218,10 @@
                     {% endif %}
 
                     <button type="submit" name="action" value="change_real_estate">Сохранить изменения</button>
+
+                    <button name="action" value="delete-real-estate" type="submit">
+                            Удалить недвижимость
+                    </button>
                 </form>
 
                 <hr>
@@ -285,6 +289,7 @@
                     {% endif %}
 
                     <button type="submit" name="action" value="change_offer">Сохранить изменения</button>
+                    <button  type="submit" name="action" value="delete-offer">Удалить предложение</button>
                 </form>
 
                 <hr>
@@ -377,6 +382,7 @@
                     {% endif %}
 
                     <button type="submit" name="action" value="change_demand">Сохранить изменения</button>
+                    <button  type="submit" name="action" value="delete-demand">Удалить потребность</button>
                 </form>
 
                 <hr>

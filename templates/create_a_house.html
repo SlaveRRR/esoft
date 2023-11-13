@@ -10,6 +10,12 @@
     
     <hr>
 
+    {% if alert %}
+        <p style="color: red; margin-bottom: 30px; font-size: large;">
+            {{alert}}
+        </p>
+    {% endif %}
+
     <div> 
         <form action="{% url 'create_a_house' %}" method="post">
             {% csrf_token %}
@@ -24,25 +30,25 @@
             <input name="street" type="text">
 
             <p>Номер дома</p>
-            <input name="house_number" type="text">
+            <input name="house_number" type="number">
 
             <p>Номер квартиры</p>
-            <input name="apartment_number" type="text">
+            <input name="apartment_number" type="number">
 
             <p>Широта</p>
-            <input name="latitude" type="text">
+            <input name="latitude" type="number" min="-90" max="90">
 
             <p>Долгота</p>
-            <input name="longitude" type="text">
+            <input name="longitude" type="number" min="-180" max="180">
 
             <p>Этажность</p>
-            <input name="floor" type="text">
+            <input name="floor" type="number">
 
             <p>Количество комнат</p>
-            <input name="number_of_rooms" type="text">
+            <input name="number_of_rooms" type="number">
 
             <p>Площадь</p>
-            <input name="square"  type="text">
+            <input name="square"  type="number">
 
             <p>Тип</p>
             <input name="type" type="text" value="house">

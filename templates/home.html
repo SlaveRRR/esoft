@@ -8,6 +8,12 @@
 
     <h2 class="heading__home">Главная страница</h2>
 
+    {% if alert %}
+        <p style="color: red; margin-bottom: 30px; font-size: large;">
+            {{alert}}
+        </p>
+    {% endif %}
+
     <div class="search__home"> 
         <form method="post" action="{% url 'home' %}">
             {% csrf_token %}
