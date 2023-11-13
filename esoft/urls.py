@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land, logout_user, offers, create_offer, create_demand
+from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land, logout_user, offers, create_offer, create_demand, deals
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -47,5 +47,7 @@ urlpatterns = [
     path('create_offer/', create_offer, name='create_offer'),
 
     path('create_demand/', create_demand, name='create_demand'),
+
+    path('deals/', deals, name='deals'),
 
 ]

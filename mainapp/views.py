@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import ClientRegistrationForm, RealtorRegistrationForm
-from mainapp.models import User, RealEstate, User_Real_estate, Offers, Demand
+from mainapp.models import User, RealEstate, User_Real_estate, Offers, Demand, Deal
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 
@@ -386,3 +386,21 @@ def create_demand(request):
 
     context = {'realtors': realtors}
     return render(request, 'create_demand.html', context)
+
+
+def deals(request):
+    if request.method == 'POST':
+        deal = Deal()
+        deal.heading = request.POST.get('heading')
+        deal.offer_id = request.POST.get('select-offer')
+        deal.demand_id = request.POST.get('select-demand')
+        deal.confirmed = 0
+        deal.save()
+
+    demands = Demand.objects.all()
+    offers = Offers.objects.all()
+    deals = Deal.objects.all()
+
+    context = {'demands': demands, 'offers': offers, 'deals': deals}
+
+    return render(request, 'deals.html', context)

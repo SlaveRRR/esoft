@@ -63,12 +63,14 @@ class User_Real_estate(models.Model):
     user_real_estate = models.ForeignKey(RealEstate, on_delete=models.CASCADE)
 
 class Offers(models.Model):
+    heading = models.CharField(max_length=255, default=1)
     client = models.ForeignKey(User, on_delete=models.CASCADE, related_name="client")
     rieltor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rieltor")
     real_estate = models.ForeignKey(RealEstate, on_delete=models.CASCADE) #уже существ недвижка
     price = models.CharField(max_length=255)
 
 class Demand(models.Model):
+    heading = models.CharField(max_length=255, default=1)
     client = models.ForeignKey(User, on_delete=models.CASCADE, related_name="clientindemand")
     rieltor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rieltorindemand")
     type = models.CharField(max_length=255)
@@ -83,3 +85,56 @@ class Demand(models.Model):
     max_floor = models.CharField(max_length=255, null=True)
     min_number_of_floors = models.CharField(max_length=255, null=True)
     max_number_of_floors = models.CharField(max_length=255, null=True)
+
+class Deal(models.Model):        
+    heading = models.CharField(max_length=255, default=1)
+    offer = models.ForeignKey(Offers, on_delete=models.CASCADE, related_name="offerDeal")
+    demand = models.ForeignKey(Demand, on_delete=models.CASCADE, related_name="demandDeal")
+    confirmed = models.CharField(max_length=2)
+
+    def calculate_commission(self):
+        commission_seller = 45
+        commission_buyer = 45
+        #отчисления компаниии
+        costBuyer_company = 0
+        cost_seller_apartment_company = 0
+        cost_seller_house_company = 0
+        cost_seller_land_company = 0
+
+        # риэлтор продавца
+        if (self.offer.rieltor.commission):
+            commission_seller = int(self.offer.rieltor.commission)
+        # риэлтор покупателя
+        if(self.demand.rieltor.commission):
+            commission_buyer = int(self.demand.rieltor.commission)
+
+        #просто стоимость недвижимости
+        cost_offer = int(self.offer.price)
+        
+        # общая стоимость (компания + риэлтор) от покупателя
+        costBuyer = int((cost_offer * 3)/100) #
+        cost_realtor_buyer = int((costBuyer * commission_buyer)/100 ) #  
+        type = self.offer.real_estate.type
+ 
+        costBuyer_company = int(costBuyer - cost_realtor_buyer) # 
+
+        if (type == 'apartment'):
+            # общая стоимость (компания + риэлтор) от продавца
+            costApartment = int(36000 + (cost_offer*1)/100)
+            cost_realtor_seller_apartment = int((costApartment * commission_seller)/100)
+            cost_seller_apartment_company = int(costApartment - cost_realtor_seller_apartment)
+            cont = {'cost_seller_apartment_company': cost_seller_apartment_company, 'costBuyer_company': costBuyer_company, 'cost_realtor_seller_apartment': cost_realtor_seller_apartment, 'cost_realtor_buyer': cost_realtor_buyer }
+
+        if (type == 'house'):
+            costHouse = int(30000 + (cost_offer/100)*2)
+            cost_realtor_seller_house = int((costHouse * commission_seller)/100)
+            cost_seller_house_company = int(costHouse - cost_realtor_seller_house)
+            cont = {'cost_seller_house_company': cost_seller_house_company, 'costBuyer_company': costBuyer_company, 'cost_realtor_seller_house': cost_realtor_seller_house, 'cost_realtor_buyer': cost_realtor_buyer }
+
+        if (type == 'land'):
+            costLand = int(30000 + (cost_offer/100)*1) 
+            cost_realtor_seller_land = int((costLand * commission_seller)/100)
+            cost_seller_land_company = int(costLand - cost_realtor_seller_land)
+            cont = {'cost_seller_land_company': cost_seller_land_company, 'costBuyer_company': costBuyer_company, 'cost_realtor_seller_land': cost_realtor_seller_land, 'cost_realtor_buyer': cost_realtor_buyer }
+
+        return cont

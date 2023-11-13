@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Сделки</h1>
+    
+    <hr>
+
+    <div> 
+        <h2>Создание новой сделки</h2>
+
+        <form action="{% url 'deals' %}" method="post"> 
+            {% csrf_token %}
+            
+            <p>
+                Введите название сделки
+            </p>
+
+            <input type="text" name="heading">
+
+            <!-- предложение -->
+            <select name="select-offer">
+                {% for offer in offers %}
+                    <option value="{{ offer.id}}">{{ offer.heading }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- потребность -->
+            <select name="select-demand">
+                {% for demand in demands %}
+                    <option value="{{ demand.id }}">{{ demand.heading }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Создать сделку</button>
+
+            <p>
+                Учтите, что сделка будет завершенной, когда другой человек ее подтвердит!
+            </p>
+        </form>
+    </div>
+
+    <hr>
+
+    <div> 
+        <h2>Заключенные сделки</h2>
+
+        <ul>
+            {% for deal in deals %}
+                <hr>
+
+                <li>
+                    <p>Название сделки: {{deal.heading}}</p>
+
+                    <p>Отчисления компании от покупателя: {{deal.calculate_commission.costBuyer_company}}</p>
+
+                    <p>Отчисления компании от продавца: {{deal.calculate_commission.cost_realtor_seller_apartment}}</p>
+
+                    <p>Отчисления риэлтору покупателя: {{deal.calculate_commission.cost_realtor_buyer}}</p>
+
+                    <p>Отчисления риэлтору продавца: {{deal.calculate_commission.cost_realtor_buyer}}</p>
+                </li>
+
+                <hr>
+            {% endfor %}
+        </ul>
+    </div>
+ 
+
+{% endblock %}
