@@ -60,10 +60,22 @@
         <button id="editUserBtn">
             Редактировать аккаунт
         </button>
+        <form action="{% url 'profile' %}" method="post">
+            {% csrf_token %}
 
-        <button>
-            Удалить аккаунт
-        </button>
+            <button name="action" value="delete-acc" type="submit">
+                Удалить аккаунт
+            </button>
+
+            {% if alert %}
+                <p style="color: red;">
+                    {{alert}}
+                </p>
+            {% endif %}
+
+
+        </form>
+
     </div>
 
     <!-- Модальное окно для изменения пользователя -->

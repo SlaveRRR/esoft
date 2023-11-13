@@ -98,6 +98,8 @@ def search_real_estates(city, street, target_city, target_street):
     
 
 def home(request):
+    context = {}
+
     target_last_name = '' #из POST приходят
     target_first_name = ''
     target_middle_name = ''
@@ -117,7 +119,7 @@ def home(request):
         all_real_estates = all_real_estates.filter(city=selected_city)
 
 
-    context = {'all_real_estates': all_real_estates}
+    context['all_real_estates'] = all_real_estates
 
 
     if request.method == 'POST':
@@ -139,7 +141,7 @@ def home(request):
                 if search_fio(user.last_name, user.first_name, user.middle_name, target_last_name, target_first_name, target_middle_name):
                     usersFinal.append(f"Найден клиент: {user.last_name} {user.first_name} {user.middle_name}")
             
-            context = {'users':usersFinal}
+            context ['users'] = usersFinal
 
             return render(request, 'home.html', context)
         
@@ -158,7 +160,7 @@ def home(request):
                 if search_real_estates(real_estate.city, real_estate.street, target_city, target_street):
                     real_estates_final.append(f"Найдена недвижимость: {real_estate.heading}")
             
-            context = {'real_estates':real_estates_final}
+            context['real_estates'] = real_estates_final
 
             return render(request, 'home.html', context)
     
@@ -167,6 +169,8 @@ def home(request):
 
 # @login_required
 def profile(request):
+
+    context = {}
 
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -225,8 +229,19 @@ def profile(request):
             demand.min_number_of_floors = request.POST.get('min_number_of_floors')
             demand.max_number_of_floors = request.POST.get('max_number_of_floors')
             demand.save()
+
+        if action == 'delete-acc':
+            user = User.objects.get(pk=request.user.id)
+
+
+            if (user.delete_value == True):
+                user.delete()
+
+                return render(request, 'home.html')
+            else:
+                context['alert'] = 'невозможно удалить т к у вас есть предложение или потребность'
         
-    context = {}
+    
 
     user_real_estates = User_Real_estate.objects.filter(user_id=request.user.id) #объекты юзер_недвижимости конкретного юзера {id, user_id, real_estate_id}
     real_estates = []

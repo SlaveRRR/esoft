@@ -26,7 +26,6 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-
 class User(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=255, blank=True, unique=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
@@ -37,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_realtor = models.BooleanField(null=True)
     email = models.EmailField(blank=True, null=True)
     Active = models.SmallIntegerField(null=True, default=1)
+    delete_value = models.BooleanField(default=True)
     
     objects = CustomUserManager()
 
@@ -110,7 +110,7 @@ class Deal(models.Model):
 
         #просто стоимость недвижимости
         cost_offer = int(self.offer.price)
-        
+
         # общая стоимость (компания + риэлтор) от покупателя
         costBuyer = int((cost_offer * 3)/100) #
         cost_realtor_buyer = int((costBuyer * commission_buyer)/100 ) #  
