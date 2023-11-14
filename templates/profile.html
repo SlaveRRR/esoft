@@ -100,7 +100,7 @@
 
                 {% if user.nickname %}
                     <p>Ник: </p> 
-                    <input name="editNickname" type="text" value="{{user.nickname}}"> 
+                    <input name="editNickname" type="text" value="{{user.nickname}}">
                 {% endif %}
 
                 {% if user.last_name %}
@@ -131,6 +131,9 @@
                 {% if user.comission %}
                     <p>Комиссия: </p>
                     <input name="editCommission" type="number" value="{{user.commission}}"> 
+                {% else %}
+                    <p>Комиссия(для риэлтора): </p>
+                    <input name="editCommission" type="number"> 
                 {% endif %}
 
                 <button class="btnSaveUser" type="submit" name="action" value="change_user">Сохранить</button>
@@ -170,51 +173,81 @@
                     {% if real_estate.city %}
                         <p>Город</p>
                         <input name="city" type="text" value="{{real_estate.city}}">
+                    {% else %}
+                        <p>Город</p>
+                        <input name="city" type="text">
                     {% endif %}
 
                     {% if real_estate.street %}
                         <p>Улица</p>
                         <input name="street" type="text" value="{{real_estate.street}}">
+                    {% else %}
+                        <p>Улица</p>
+                        <input name="street" type="text">
                     {% endif %}
 
                     {% if real_estate.house_number %}
                         <p>Номер дома</p>
                         <input name="house_number" type="text" value="{{real_estate.house_number}}">
+                    {% else %}
+                        <p>Номер дома</p>
+                        <input name="house_number" type="text">
                     {% endif %}
 
                     {% if real_estate.apartment_number %}
                         <p>Номер квартиры</p>
                         <input name="apartment_number" type="text" value="{{real_estate.apartment_number}}">
+                    {% else %}
+                        <p>Номер квартиры</p>
+                        <input name="apartment_number" type="text">
                     {% endif %}
 
                     {% if real_estate.latitude %}
                         <p>Широта</p>
                         <input name="latitude" type="text" value="{{real_estate.latitude}}">
+                    {% else %}
+                        <p>Широта</p>
+                        <input name="latitude" type="text">
                     {% endif %}
 
                     {% if real_estate.longitude %}
                         <p>Долгота</p>
                         <input name="longitude" type="text" value="{{real_estate.longitude}}">
+                    {% else %}
+                        <p>Долгота</p>
+                        <input name="longitude" type="text">
                     {% endif %}
 
                     {% if real_estate.floor %}
                         <p>Этаж</p>
                         <input name="floor" type="text" value="{{real_estate.floor}}">
+                    {% else %}
+                        <p>Этаж</p>
+                        <input name="floor" type="text">
                     {% endif %}
 
                     {% if real_estate.number_of_floors %}
                         <p>Этажность</p>
                         <input name="number_of_floors" type="text" value="{{real_estate.number_of_floors}}">
+                    {% else %}
+                        <p>Этажность</p>
+                        <input name="number_of_floors" type="text">
                     {% endif %}
 
                     {% if real_estate.number_of_rooms %}
                         <p>Количество комнат</p>
                         <input name="number_of_rooms" type="text" value="{{real_estate.number_of_rooms}}">
+                    {% else %}
+                        <p>Количество комнат</p>
+                        <input name="number_of_rooms" type="text">
                     {% endif %}
 
                     {% if real_estate.square %}
                         <p>Площадь</p>
                         <input name="square" type="text" value="{{real_estate.square}}">
+                    {% else %}
+                        <p>Площадь</p>
+                        <input name="square" type="text">
                     {% endif %}
 
                     <button type="submit" name="action" value="change_real_estate">Сохранить изменения</button>
@@ -329,56 +362,89 @@
                     {% if demand.address %}
                         <p>Адрес</p>
                         <input name="address" type="text" value="{{demand.address}}">
+                    {% else %}
+                        <p>Адрес</p>
+                        <input name="address" type="text">
                     {% endif %}
 
                     {% if demand.min_price %}
                         <p>Мин цена</p>
                         <input name="min_price" type="text" value="{{demand.min_price}}">
+                    {% else %}
+                        <p>Мин цена</p>
+                        <input name="min_price" type="text">
                     {% endif %}
 
                     {% if demand.max_price %}
                         <p>Макс цена</p>
                         <input name="max_price" type="text" value="{{demand.max_price}}">
+                    {% else %}
+                        <p>Макс цена</p>
+                        <input name="max_price" type="text">
                     {% endif %}
 
                     {% if demand.min_square %}
                         <p>Мин площадь</p>
                         <input name="min_square" type="text" value="{{demand.min_square}}">
+                    {% else %}
+                        <p>Мин площадь</p>
+                        <input name="min_square" type="text">
                     {% endif %}
 
                     {% if demand.max_square %}
                         <p>Макс площадь</p>
                         <input name="max_square" type="text" value="{{demand.max_square}}">
+                    {% else %}
+                        <p>Макс площадь</p>
+                        <input name="max_square" type="text">
                     {% endif %}
 
                     {% if demand.min_number_of_rooms %}
                         <p>Мин количество комнат</p>
                         <input name="min_number_of_rooms" type="text" value="{{demand.min_number_of_rooms}}">
+                    {% else %}
+                        <p>Мин количество комнат</p>
+                        <input name="min_number_of_rooms" type="text">
                     {% endif %}
 
                     {% if demand.max_number_of_rooms %}
                         <p>Макс количество комнат</p>
                         <input name="max_number_of_rooms" type="text" value="{{demand.max_number_of_rooms}}">
+                    {% else %}
+                        <p>Макс количество комнат</p>
+                        <input name="max_number_of_rooms" type="text">
                     {% endif %}
 
                     {% if demand.min_floor %}
                         <p>Мин этаж</p>
                         <input name="min_floor" type="text" value="{{demand.min_floor}}">
+                    {% else %}
+                        <p>Мин этаж</p>
+                        <input name="min_floor" type="text">
                     {% endif %}
 
                     {% if demand.max_floor %}
                         <p>Макс этаж</p>
                         <input name="max_floor" type="text" value="{{demand.max_floor}}">
+                    {% else %}
+                        <p>Макс этаж</p>
+                        <input name="max_floor" type="text">
                     {% endif %}
 
                     {% if demand.min_number_of_floors %}
                         <p>Мин количество этажей</p>
                         <input name="min_number_of_floors" type="text" value="{{demand.min_number_of_floors}}">
+                    {% else %}
+                        <p>Мин количество этажей</p>
+                        <input name="min_number_of_floors" type="text">
                     {% endif %}
 
                     {% if demand.max_number_of_floors %}
                         <p>Макс количество этажей</p>
                         <input name="max_number_of_floors" type="text" value="{{demand.max_number_of_floors}}">
+                    {% else %}
+                        <p>Макс количество этажей</p>
+                        <input name="max_number_of_floors" type="text">
                     {% endif %}
 
                     <button type="submit" name="action" value="change_demand">Сохранить изменения</button>
