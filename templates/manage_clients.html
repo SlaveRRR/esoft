@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Управление клиентами и риэлторами</h1>
+    
+    <hr>
+
+    <div> 
+        <h2>Выбор клиента</h2>
+
+        <form action="{% url 'manage_clients' %}" method="post">
+            {% csrf_token %}
+
+            <select name="select-client">
+                <option value="0">Выбрать клиента</option>
+                {% for client in clients %}
+                    <option value="{{client.id}}">
+                        {{client.nickname}}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" name="action" value="choose-client">просмотреть предложения и потребности выбранного клиента</button>
+        </form>
+
+        <p style="font-weight: 600; margin-bottom: 20px; margin-top: 20px;">Предложения клиента:</p>
+
+        <ul>
+            {% for client_offer in client_offers %}
+                <li>
+                    <p>Название предложения: {{client_offer.heading}}</p>
+                    <p>Цена предложения: {{client_offer.price}}</p>
+                    <p>Название недвижимости: {{client_offer.real_estate.heading}}</p>
+
+                    {% if client_offer.real_estate.type %}
+                        <p>Тип: {{client_offer.real_estate.type}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.city %}
+                        <p>Город: {{client_offer.real_estate.city}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.street %}
+                        <p>Улица: {{client_offer.real_estate.street}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.house_number %}
+                        <p>Номер дома: {{client_offer.real_estate.house_number}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.apartment_number %}
+                        <p>Номер квартиры: {{client_offer.real_estate.apartment_number}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.latitude %}
+                        <p>Широта: {{client_offer.real_estate.latitude}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.longitude %}
+                        <p>Долгота: {{client_offer.real_estate.longitude}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.floor %}
+                        <p>Этаж: {{client_offer.real_estate.floor}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.number_of_floors %}
+                        <p>Этажность: {{client_offer.real_estate.number_of_floors}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.number_of_rooms %}
+                        <p>Количество комнат: {{client_offer.real_estate.number_of_rooms}}</p>
+                    {% endif %}
+
+                    {% if client_offer.real_estate.square %}
+                        <p>Площадь: {{client_offer.real_estate.square}}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <p style="font-weight: 600; margin-bottom: 20px; margin-top: 20px;">Потребности клиента:</p>
+
+        <ul>
+            {% for client_demand in client_demands %}
+                <li>
+                    <p>Название потребности: {{client_demand.heading}}</p>
+
+                    {% if client_demand.address %}
+                        <p>Город: {{client_demand.address}}</p>
+                    {% endif %}
+
+                    {% if client_demand.min_price %}
+                        <p>Минимальная стоимость: {{client_demand.min_price}}</p>
+                    {% endif %}
+
+                    {% if client_demand.max_price %}
+                        <p>Максимальная стоимость: {{client_demand.max_price}}</p>
+                    {% endif %}
+
+                    {% if client_demand.min_square %}
+                        <p>Минимальная площадь: {{client_demand.min_square}}</p>
+                    {% endif %}
+
+                    {% if client_demand.max_square %}
+                        <p>Максимальная площадь: {{client_demand.max_square}}</p>
+                    {% endif %}
+
+                    {% if client_demand.min_number_of_rooms %}
+                        <p>Минимальное количество комнат: {{client_demand.min_number_of_rooms}}</p>
+                    {% endif %}
+
+                    {% if client_demand.max_number_of_room %}
+                        <p>Максимальное количество комнат: {{client_demand.max_number_of_room}}</p>
+                    {% endif %}
+
+                    {% if client_demand.min_floor %}
+                        <p>Минимальный этаж: {{client_demand.min_floor}}</p>
+                    {% endif %}
+
+                    {% if client_demand.max_floor %}
+                        <p>Максимальный этаж: {{client_demand.max_floor}}</p>
+                    {% endif %}
+
+                    {% if client_demand.min_number_of_floors %}
+                        <p>Минимальное количество этажей: {{client_demand.min_number_of_floors}}</p>
+                    {% endif %}
+
+                    {% if client_demand.max_number_of_floors	 %}
+                        <p>Максимальное количество этажей: {{client_demand.max_number_of_floors	}}</p>
+                    {% endif %}
+                
+                </li>
+            {% endfor %}
+        </ul>
+
+        <hr>
+        <hr>
+        <hr>
+        <hr>
+
+        <h2>Выбор риэлтора</h2>
+
+        <form action="{% url 'manage_clients' %}" method="post">
+            {% csrf_token %}
+
+            <select name="select-realtor">
+                <option value="0">Выбрать риэлтора</option>
+                {% for realtor in realtors %}
+                    <option value="{{realtor.id}}">
+                        {{realtor.nickname}}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" name="action" value="choose-realtor">просмотреть предложения и потребности выбранного риэлтора</button>
+        </form>
+
+        <p style="font-weight: 600; margin-bottom: 20px; margin-top: 20px;">Предложения риэлтора:</p>
+        <ul>
+            {% for realtor_offer in realtor_offers %}
+                <li>
+                    <p>Название предложения: {{realtor_offer.heading}}</p>
+                    <p>Цена предложения: {{realtor_offer.price}}</p>
+                    <p>Название недвижимости: {{realtor_offer.real_estate.heading}}</p>
+
+                    {% if realtor_offer.real_estate.type %}
+                        <p>Тип: {{realtor_offer.real_estate.type}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.city %}
+                        <p>Город: {{realtor_offer.real_estate.city}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.street %}
+                        <p>Улица: {{realtor_offer.real_estate.street}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.house_number %}
+                        <p>Номер дома: {{realtor_offer.real_estate.house_number}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.apartment_number %}
+                        <p>Номер квартиры: {{realtor_offer.real_estate.apartment_number}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.latitude %}
+                        <p>Широта: {{realtor_offer.real_estate.latitude}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.longitude %}
+                        <p>Долгота: {{realtor_offer.real_estate.longitude}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.floor %}
+                        <p>Этаж: {{realtor_offer.real_estate.floor}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.number_of_floors %}
+                        <p>Этажность: {{realtor_offer.real_estate.number_of_floors}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.number_of_rooms %}
+                        <p>Количество комнат: {{realtor_offer.real_estate.number_of_rooms}}</p>
+                    {% endif %}
+
+                    {% if realtor_offer.real_estate.square %}
+                        <p>Площадь: {{realtor_offer.real_estate.square}}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+
+        <p style="font-weight: 600; margin-bottom: 20px; margin-top: 20px;">Потребности риэлтора:</p>
+        <ul>
+            {% for realtor_demand in realtor_demands %}
+                <li>
+                    <p>Название потребности: {{realtor_demand.heading}}</p>
+
+                    {% if realtor_demand.address %}
+                        <p>Город: {{realtor_demand.address}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.min_price %}
+                        <p>Минимальная стоимость: {{realtor_demand.min_price}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.max_price %}
+                        <p>Максимальная стоимость: {{realtor_demand.max_price}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.min_square %}
+                        <p>Минимальная площадь: {{realtor_demand.min_square}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.max_square %}
+                        <p>Максимальная площадь: {{realtor_demand.max_square}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.min_number_of_rooms %}
+                        <p>Минимальное количество комнат: {{realtor_demand.min_number_of_rooms}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.max_number_of_room %}
+                        <p>Максимальное количество комнат: {{realtor_demand.max_number_of_room}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.min_floor %}
+                        <p>Минимальный этаж: {{realtor_demand.min_floor}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.max_floor %}
+                        <p>Максимальный этаж: {{realtor_demand.max_floor}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.min_number_of_floors %}
+                        <p>Минимальное количество этажей: {{realtor_demand.min_number_of_floors}}</p>
+                    {% endif %}
+
+                    {% if realtor_demand.max_number_of_floors	 %}
+                        <p>Максимальное количество этажей: {{realtor_demand.max_number_of_floors	}}</p>
+                    {% endif %}
+                
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+{% endblock %}

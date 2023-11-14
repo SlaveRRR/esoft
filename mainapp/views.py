@@ -503,3 +503,36 @@ def deals(request):
     context = {'demands': demands, 'offers': offers, 'deals': deals}
 
     return render(request, 'deals.html', context)
+
+def manage_clients(request):
+    context = {}
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'choose-client':
+            client_id = request.POST.get('select-client')
+            #потребности
+            client_offers = Offers.objects.filter(client = client_id)
+            #предложения
+            client_demands = Demand.objects.filter(client = client_id)
+            context['client_offers'] = client_offers
+            context['client_demands'] = client_demands
+
+        if action == 'choose-realtor':
+            realtor_id = request.POST.get('select-realtor')
+            #потребности
+            realtor_offers = Offers.objects.filter(rieltor = realtor_id)
+            #предложения
+            realtor_demands = Demand.objects.filter(rieltor = realtor_id)
+            context['realtor_offers'] = realtor_offers
+            context['realtor_demands'] = realtor_demands
+
+    realtors = User.objects.filter(is_realtor=1)
+    clients = User.objects.filter(is_realtor=0)
+    context['realtors'] = realtors
+    context['clients'] = clients
+
+
+
+    return render(request, 'manage_clients.html', context)
