@@ -266,6 +266,7 @@ def profile(request):
                 user.delete_value == True
 
             if (user.delete_value == True):
+                logout(request)
                 user.delete()
                 return render(request, 'home.html')
             else:
@@ -429,8 +430,8 @@ def create_land(request):
     return render(request, 'create_land.html', context)
 
 
-def offers(request):
-    return render(request, 'offers.html')
+def search_offers_demands(request):
+    return render(request, 'search_offers_demands.html')
 
 
 def create_offer(request):
