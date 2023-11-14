@@ -279,6 +279,8 @@
                 <form action="{% url 'profile' %}" method="post">
                     {% csrf_token %}
 
+                    <input name="heading" type="text" value="{{offer.heading}}" style="width: 350px;">
+
                     <input name="id" type="text" value="{{offer.id}}" style="visibility: hidden;">
 
                     {% if offer.price %}

@@ -431,12 +431,41 @@ def create_land(request):
 
 
 def search_offers_demands(request):
-    return render(request, 'search_offers_demands.html')
+    context = {}
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'search-offer':
+            demand_id = request.POST.get('select-demand')
+            demand = Demand.objects.get(pk=demand_id)
+            city = demand.address
+
+            found_offers = Offers.objects.filter(real_estate__city = city)
+
+            context["found_offers"] = found_offers
+
+        if action == 'search-demand':
+            offer_id = request.POST.get('select-offer')
+            offer = Offers.objects.get(pk=offer_id)
+            city = offer.real_estate.city
+
+            found_demands = Demand.objects.filter(address = city)
+
+            context["found_demands"] = found_demands
+
+    offers = Offers.objects.all()
+    demands = Demand.objects.all()
+    context['offers'] = offers
+    context['demands'] = demands
+
+    return render(request, 'search_offers_demands.html', context)
 
 
 def create_offer(request):
     if request.method == 'POST':
         newOffer = Offers()
+        newOffer.heading = request.POST.get('heading')
         newOffer.price = request.POST.get('price')
         newOffer.client_id = request.user.id
         newOffer.real_estate_id = request.POST.get('select-real-estates')
