@@ -275,6 +275,7 @@ def profile(request):
                 user.delete_value == True
 
             if (user.delete_value == True):
+                logout(request)
                 user.delete()
                 return render(request, 'home.html')
             else:
@@ -451,13 +452,42 @@ def create_land(request):
     return render(request, 'create_land.html', context)
 
 
-def offers(request):
-    return render(request, 'offers.html')
+def search_offers_demands(request):
+    context = {}
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'search-offer':
+            demand_id = request.POST.get('select-demand')
+            demand = Demand.objects.get(pk=demand_id)
+            city = demand.address
+
+            found_offers = Offers.objects.filter(real_estate__city = city)
+
+            context["found_offers"] = found_offers
+
+        if action == 'search-demand':
+            offer_id = request.POST.get('select-offer')
+            offer = Offers.objects.get(pk=offer_id)
+            city = offer.real_estate.city
+
+            found_demands = Demand.objects.filter(address = city)
+
+            context["found_demands"] = found_demands
+
+    offers = Offers.objects.all()
+    demands = Demand.objects.all()
+    context['offers'] = offers
+    context['demands'] = demands
+
+    return render(request, 'search_offers_demands.html', context)
 
 
 def create_offer(request):
     if request.method == 'POST':
         newOffer = Offers()
+        newOffer.heading = request.POST.get('heading')
         newOffer.price = request.POST.get('price')
         newOffer.client_id = request.user.id
         newOffer.real_estate_id = request.POST.get('select-real-estates')
@@ -525,3 +555,36 @@ def deals(request):
     context = {'demands': demands, 'offers': offers, 'deals': deals}
 
     return render(request, 'deals.html', context)
+
+def manage_clients(request):
+    context = {}
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'choose-client':
+            client_id = request.POST.get('select-client')
+            #потребности
+            client_offers = Offers.objects.filter(client = client_id)
+            #предложения
+            client_demands = Demand.objects.filter(client = client_id)
+            context['client_offers'] = client_offers
+            context['client_demands'] = client_demands
+
+        if action == 'choose-realtor':
+            realtor_id = request.POST.get('select-realtor')
+            #потребности
+            realtor_offers = Offers.objects.filter(rieltor = realtor_id)
+            #предложения
+            realtor_demands = Demand.objects.filter(rieltor = realtor_id)
+            context['realtor_offers'] = realtor_offers
+            context['realtor_demands'] = realtor_demands
+
+    realtors = User.objects.filter(is_realtor=1)
+    clients = User.objects.filter(is_realtor=0)
+    context['realtors'] = realtors
+    context['clients'] = clients
+
+
+
+    return render(request, 'manage_clients.html', context)

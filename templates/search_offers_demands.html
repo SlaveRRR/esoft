@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}{% endblock style %}
+
+{% block content %}
+
+    <h1>Поиск предложений и потребностей</h1>
+    
+    <hr>
+
+    <div> 
+
+        <form action="{% url 'search_offers_demands' %}" method="post">
+            {% csrf_token %}
+
+            <select name="select-demand">
+                {% for demand in demands %}
+                    <option value="{{demand.id}}">
+                        {{demand.heading}}
+    
+                        {% if demand.address %}
+                            (Город: {{demand.address}})
+                        {% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+    
+            <button type="submit" name="action" value="search-offer">
+                Искать предложение для потребности
+            </button>
+        </form>
+
+        <p>Найденные предложения:</p>
+        {% for found_offer in found_offers %}
+            <p>{{found_offer.heading}}</p>
+            <p>{{found_offer.real_estate.city}}</p>
+
+            <hr>
+        {% endfor %}
+
+        <hr>
+
+        <form action="{% url 'search_offers_demands' %}" method="post">
+            {% csrf_token %}
+            
+            <select name="select-offer">
+                {% for offer in offers %}
+                    <option value="{{offer.id}}">
+                        {{offer.heading}}
+    
+                        {% if offer.real_estate.city %}
+                            (Город: {{offer.real_estate.city}})
+                        {% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+    
+            <button type="submit" name="action" value="search-demand">
+                Искать потребность для предложения
+            </button>
+        </form>
+
+        <p>Найденные потребности:</p>
+        {% for found_demand in found_demands %}
+            <p>{{found_demand.heading}}</p>
+            <p>{{found_demand.address}}</p>
+
+            <hr>
+        {% endfor %}
+        
+    </div>
+ 
+
+{% endblock %}

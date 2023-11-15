@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from esoft import settings
 from django.contrib import admin
 from django.urls import path, include
-from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land, logout_user, offers, create_offer, create_demand, deals
+from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land, logout_user, search_offers_demands, create_offer, create_demand, deals, manage_clients
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -45,7 +45,7 @@ urlpatterns = [
 
     path('create_land/', create_land, name='create_land'),
 
-    path('offers/', offers, name='offers'),
+    path('search_offers_demands/', search_offers_demands, name='search_offers_demands'),
 
     path('create_offer/', create_offer, name='create_offer'),
 
@@ -53,7 +53,10 @@ urlpatterns = [
 
     path('deals/', deals, name='deals'),
 
-    path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls')),
+
+    path('manage_clients/', manage_clients, name='manage_clients'),
+
 ]
 
 if settings.DEBUG:
