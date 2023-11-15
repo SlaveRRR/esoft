@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import ClientRegistrationForm, RealtorRegistrationForm
-from mainapp.models import User, RealEstate, User_Real_estate, Offers, Demand, Deal
+from mainapp.models import User, RealEstate, User_Real_estate, Offers, Demand, Deal, Region
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 
@@ -103,6 +103,7 @@ def search_real_estates(city, street, house, apartment, target_city, target_stre
     
 
 def home(request):
+
     context = {}
 
     target_last_name = '' #из POST приходят
@@ -114,6 +115,10 @@ def home(request):
 
     selected_type = request.GET.get('type')
     selected_city = request.GET.get('city')
+    selected_region = request.GET.get('region')
+
+    regions = Region.objects.all().filter(city=selected_city)
+    context['regions'] = regions
     
     all_real_estates = RealEstate.objects.all()
 
@@ -122,6 +127,10 @@ def home(request):
 
     if selected_city and selected_city != '0':
         all_real_estates = all_real_estates.filter(city=selected_city)
+        context['selected_city'] = selected_city
+    
+    if selected_region and selected_region != '0':
+        all_real_estates = all_real_estates.filter(region_id=int(selected_region))
 
 
     context['all_real_estates'] = all_real_estates
@@ -333,7 +342,8 @@ def real_estate(request):
 
 def create_an_apartment(request):
 
-    context = {}
+    regions = Region.objects.all()
+    context = {"regions":regions}
 
     if request.method == 'POST':
         newApartment= RealEstate()
@@ -348,12 +358,15 @@ def create_an_apartment(request):
         newApartment.number_of_rooms = request.POST.get('number_of_rooms')
         newApartment.square = request.POST.get('square')
         newApartment.type = request.POST.get('type')
+        newApartment.latX = request.POST.get('X')
+        newApartment.lngY = request.POST.get('Y')
+        newApartment.region_id = float(request.POST.get('region'))
         newApartment.save()
         
         if newApartment:
-            context = {'alert': 'Данные сохранены'}
+            context = {'alert': 'Данные сохранены',"regions":regions}
         else:
-            context = {'alert': 'Данные некорректны'}
+            context = {'alert': 'Данные некорректны',"regions":regions}
 
         newuser_real_estate_object = User_Real_estate()
         user_id = User.objects.get(pk=request.user.id)
@@ -367,7 +380,8 @@ def create_an_apartment(request):
 
 def create_a_house(request):
 
-    context = {}
+    regions = Region.objects.all()
+    context = {"regions":regions}
 
     if request.method == 'POST':
         newHouse= RealEstate()
@@ -382,12 +396,15 @@ def create_a_house(request):
         newHouse.number_of_rooms = request.POST.get('number_of_rooms')
         newHouse.square = request.POST.get('square')
         newHouse.type = request.POST.get('type')
+        newHouse.latX = request.POST.get('X')
+        newHouse.lngY = request.POST.get('Y')
+        newHouse.region_id = float(request.POST.get('region'))
         newHouse.save()
 
         if newHouse:
-            context = {'alert': 'Данные сохранены'}
+            context = {'alert': 'Данные сохранены',"regions":regions}
         else:
-            context = {'alert': 'Данные некорректны'}
+            context = {'alert': 'Данные некорректны',"regions":regions}
 
         newuser_real_estate_object = User_Real_estate()
         user_id = User.objects.get(pk=request.user.id)
@@ -400,7 +417,9 @@ def create_a_house(request):
 
 def create_land(request):
 
-    context = {}
+    regions = Region.objects.all()
+
+    context = {"regions":regions}
 
     if request.method == 'POST':
         newLand = RealEstate()
@@ -413,12 +432,15 @@ def create_land(request):
         newLand.longitude = request.POST.get('longitude')
         newLand.square = request.POST.get('square')
         newLand.type = request.POST.get('type')
+        newLand.latX = request.POST.get('X')
+        newLand.lngY = request.POST.get('Y')
+        newLand.region_id = float(request.POST.get('region'))
         newLand.save()
 
         if newLand:
-            context = {'alert': 'Данные сохранены'}
+            context = {'alert': 'Данные сохранены',"regions":regions}
         else:
-            context = {'alert': 'Данные некорректны'}
+            context = {'alert': 'Данные некорректны',"regions":regions}
 
         newuser_real_estate_object = User_Real_estate()
         user_id = User.objects.get(pk=request.user.id)

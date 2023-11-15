@@ -57,12 +57,21 @@
         <option value="land">Земля</option>
     </select>
 
+
     <select name="city_select" id="city_select"> 
         <option value="Москва"  style="display: none;">Москва</option>
         <option value="Москва">Москва</option>
         <option value="Дмитров">Дмитров</option>
         <option value="Минск">Минск</option>
     </select>
+    <p id="status" style="display: none;">{{selected_city}}</p>
+    {% if selected_city %}
+        <select name="region_select" id="region_select"> 
+            {% for region in regions %}
+                <option value={{ forloop.counter }} >{{ region.region_name }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
 
     <button id="btn_filter">Применить фильтры</button>
 
@@ -88,6 +97,11 @@
         function applyFilters() {
             var typeSelect = document.getElementById('type_select').value;
             var citySelect = document.getElementById('city_select').value;
+            a = document.getElementById('status').textContent
+            console.log("document.getElementById('status').textContent",a)
+            if (document.getElementById('status').textContent != ""){
+                var regionSelect = document.getElementById('region_select').value;
+            }                
 
             var queryParams = [];
         
@@ -97,6 +111,10 @@
         
             if (citySelect) {
                 queryParams.push('city=' + citySelect);
+            }
+
+            if (regionSelect) {
+                queryParams.push('region=' + regionSelect);
             }
 
             var queryString = queryParams.join('&');

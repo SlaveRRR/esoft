@@ -5,6 +5,7 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.validators import MaxValueValidator, MinValueValidator
+# from django.contrib.gis.db import models
 
 
 class CustomUserManager(BaseUserManager):
@@ -44,6 +45,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = []
 
+class Region(models.Model):
+    id = models.AutoField(primary_key=True)
+    region_name = models.CharField(max_length=255)
+    city = models.CharField(max_length=255, null=True)
+
 class RealEstate(models.Model):
     id = models.AutoField(primary_key=True)
     heading = models.CharField(max_length=255, default=1)
@@ -52,12 +58,15 @@ class RealEstate(models.Model):
     street = models.CharField(max_length=255, null=True)
     house_number = models.CharField(max_length=255, null=True)
     apartment_number = models.CharField(max_length=255, null=True)
-    latitude = models.CharField(max_length=255, null=True, validators=[MinValueValidator(-90), MaxValueValidator(90)])
-    longitude = models.CharField(max_length=255, null=True, validators=[MinValueValidator(-180), MaxValueValidator(180)])
+    # latitude = models.CharField(max_length=255, null=True, validators=[MinValueValidator(-90), MaxValueValidator(90)])
+    # longitude = models.CharField(max_length=255, null=True, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     floor = models.CharField(max_length=255, null=True)
     number_of_floors = models.CharField(max_length=255, null=True)
     number_of_rooms = models.CharField(max_length=255, null=True)
     square = models.CharField(max_length=255, null=True)
+    latX = models.CharField(max_length=255,null=True, validators=[MinValueValidator(-90), MaxValueValidator(90)])
+    lngY = models.CharField(max_length=255,null=True, validators=[MinValueValidator(-180), MaxValueValidator(180)])
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name="regionRealEstate",null=True)
 
 class User_Real_estate(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -139,3 +148,25 @@ class Deal(models.Model):
             cont = {'cost_seller_land_company': cost_seller_land_company, 'costBuyer_company': costBuyer_company, 'cost_realtor_seller_land': cost_realtor_seller_land, 'cost_realtor_buyer': cost_realtor_buyer }
 
         return cont
+
+# class WorldBorder(models.Model):
+#     # Regular Django fields corresponding to the attributes in the
+#     # world borders shapefile.
+#     name = models.CharField(max_length=50)
+#     area = models.IntegerField()
+#     pop2005 = models.IntegerField("Population 2005")
+#     fips = models.CharField("FIPS Code", max_length=2, null=True)
+#     iso2 = models.CharField("2 Digit ISO", max_length=2)
+#     iso3 = models.CharField("3 Digit ISO", max_length=3)
+#     un = models.IntegerField("United Nations Code")
+#     region = models.IntegerField("Region Code")
+#     subregion = models.IntegerField("Sub-Region Code")
+#     lon = models.FloatField()
+#     lat = models.FloatField()
+
+#     # GeoDjango-specific: a geometry field (MultiPolygonField)
+#     mpoly = models.MultiPolygonField()
+
+#     # Returns the string representation of the model.
+#     def __str__(self):
+#         return self.name

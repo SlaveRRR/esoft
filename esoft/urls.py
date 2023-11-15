@@ -13,6 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from django.conf.urls.static import static
+from esoft import settings
 from django.contrib import admin
 from django.urls import path, include
 from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land, logout_user, offers, create_offer, create_demand, deals
@@ -50,4 +53,8 @@ urlpatterns = [
 
     path('deals/', deals, name='deals'),
 
+    path('api-auth/', include('rest_framework.urls'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

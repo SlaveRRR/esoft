@@ -2,12 +2,13 @@
 
 {% load static %}
 
-{% block style %}{% endblock style %}
+{% block style %}<link type="text/js" rel="stylesheet" href="{% static 'mainapp/static/css/styles.css' %}">{% endblock style %}
 
 {% block content %}
-
     <h1>Создать недвижимость(выберите тип):</h1>
     
+
+
     <hr>
 
     <div> 
@@ -31,6 +32,6 @@
     <hr>
 
     
- 
 
 {% endblock %}
+

@@ -7,7 +7,9 @@
 {% block content %}
 
     <h1>Создание дома</h1>
-    
+
+    <div id="map"></div>
+
     <hr>
 
     {% if alert %}
@@ -35,11 +37,12 @@
             <p>Номер квартиры</p>
             <input name="apartment_number" type="number">
 
-            <p>Широта</p>
-            <input name="latitude" type="number" min="-90" max="90">
-
-            <p>Долгота</p>
-            <input name="longitude" type="number" min="-180" max="180">
+            <p>Регион</p>
+            <select id="region" name='region'>
+                {% for region in regions %}
+                    <option value={{ forloop.counter }} >{{ region.region_name }}</option>
+                {% endfor %}
+            </select>
 
             <p>Этажность</p>
             <input name="floor" type="number">
@@ -53,9 +56,48 @@
             <p>Тип</p>
             <input name="type" type="text" value="house">
 
+            <p>Координаты:</p>
+
+            <p>Широта</p>
+            <input name="X" id = "X" type="text" min="-90" max="90">
+            <p>Долгота</p>
+            <input name="Y" id = "Y" type="text" min="-180" max="180">
+
             <button type="submit">Создать</button>
         </form>
     </div>
- 
+    
+    <style>
+        #map { height: 360px; }
+    </style>
+    
+    
+    
+    <script>
+        
+        console.log("L",L)
+        var map = L.map('map').setView([55.7522 ,  37.6156], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        a = document.querySelector('[title="A JavaScript library for interactive maps"]');
+        print("a",a)
+        a.textContent = ""
+
+        let marker = {};
+        
+        function onMapClick(e) {
+            console.log(Object.keys(e.latlng))
+            document.getElementById("X").value = e.latlng.lat
+            document.getElementById("Y").value = e.latlng.lng
+            if (marker != undefined) {
+                map.removeLayer(marker);
+            };
+            marker = L.marker(e.latlng).addTo(map);
+        }
+
+        map.on('click', onMapClick);
+    </script>
 
 {% endblock %}

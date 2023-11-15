@@ -26,6 +26,11 @@ SECRET_KEY = "django-insecure-xn6aha#a%l7hp2-afa-!i@9%2bs%e!c%!+76!-b7dx@29u65ey
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = []
+
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'mainapp.User'
@@ -42,6 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
+    # "django.contrib.gis",
     "mainapp.apps.MainappConfig",
 ]
 
