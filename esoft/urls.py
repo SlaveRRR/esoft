@@ -20,6 +20,14 @@ from django.contrib import admin
 from django.urls import path, include
 from mainapp.views import registration, client_registration, realtor_registration, home, profile, real_estate, create_an_apartment, create_a_house, create_land, logout_user, search_offers_demands, create_offer, create_demand, deals, manage_clients
 
+from rest_framework import routers
+from mainapi import views
+
+router = routers.DefaultRouter()
+router.register(r'register', views.registration)
+
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -57,6 +65,7 @@ urlpatterns = [
 
     path('manage_clients/', manage_clients, name='manage_clients'),
 
+    path('', include('main_functional.urls'))
 ]
 
 if settings.DEBUG:
