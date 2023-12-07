@@ -40,9 +40,11 @@ LOGIN_REDIRECT_URL = '/profile/'
 APPEND_SLASH=False
 # Application definition
 
+
+
 INSTALLED_APPS = [
-    'rest_framework',
     "django.contrib.admin",
+    'corsheaders',
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -51,11 +53,13 @@ INSTALLED_APPS = [
     'rest_framework',
     # "django.contrib.gis",
     "mainapp.apps.MainappConfig",
+    "mainapi.apps.MainapiConfig",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -83,6 +87,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "esoft.wsgi.application"
 
+ALLOWED_HOSTS = ["*"]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

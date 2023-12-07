@@ -23,10 +23,11 @@ from mainapp.views import registration, client_registration, realtor_registratio
 from rest_framework import routers
 from mainapi import views
 
-router = routers.DefaultRouter()
-router.register(r'register', views.registration)
-
-
+# router = routers.DefaultRouter()
+# router.register(r'registrate', views.registrate, 'Registrate')
+# router.register(r'get_events', views.get_events, basename='GetEvents')
+# router.register(r'delete_event', views.delete_event, basename='DeleteEvent')
+# router.register(r'create_event', views.create_event, basename='CreateEvent')
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -39,7 +40,7 @@ urlpatterns = [
 
     path('realtor_registration/', realtor_registration, name='realtor_registration'),
     
-    path('', include('django.contrib.auth.urls')),
+    path('auth', include('django.contrib.auth.urls')),
 
     path('profile/', profile, name='profile'),
 
@@ -64,8 +65,12 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 
     path('manage_clients/', manage_clients, name='manage_clients'),
+    
+    path('api/registrate', views.registrate, name='manage_clients'),
+    path('api/get_events', views.get_events, name='manage_clients'),
+    path('api/delete_event', views.delete_event, name='manage_clients'),
+    path('api/create_event', views.create_event, name='manage_clients'),
 
-    path('', include('main_functional.urls'))
 ]
 
 if settings.DEBUG:

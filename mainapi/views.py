@@ -3,6 +3,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from mainapi.models import Events, Events_Types
 from mainapp.models import User
+# from mainapi import serialisers
 from mainapi.serializers import Events_TypesSerializer, EventsSerialiser
 from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
