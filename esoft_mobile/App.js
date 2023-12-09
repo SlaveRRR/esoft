@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, Alert  } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useFocusEffect  } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -81,22 +81,28 @@ const HomeScreen = ({ route, navigation }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getEvents(params.user);
-        setEvents(response.events);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await getEvents(params.user);
+      setEvents(response.events);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [params]);
 
+  useEffect(() => {
     if (params && params.user) {
       fetchData();
     }
-  }, [params]);
+  }, [params, fetchData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [fetchData])
+  );
 
   const getEvents = async (id) => {
     const url = "https://c77b-95-181-208-83.ngrok-free.app/api/get_events";
@@ -162,7 +168,6 @@ const HomeScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Home {JSON.stringify(params)}</Text>
       <TouchableOpacity style={styles.addButton} onPress={handleAddSchedule}>
           <Text style={{ color: '#000', fontSize: 18 }}>Добавить расписание</Text>
       </TouchableOpacity>
@@ -222,6 +227,7 @@ const styles = StyleSheet.create({
 
 const AddSchedule = ({ route, navigation }) => {
   const { params } = route.params;
+  console.log(route.params.params.user,"route.params")
   const [eventTake, setEventTake] = useState('');
   const [eventLength, setEventLength] = useState('00:00:00');
   const [eventType, setEventType] = useState(1);
@@ -229,14 +235,15 @@ const AddSchedule = ({ route, navigation }) => {
 
   const handleCreateEvent = async () => {
     const url = 'https://c77b-95-181-208-83.ngrok-free.app/api/create_event';
-
+    console.log(route.params.params.user,"route.params.params.user")
     const data = {
       event_take: eventTake,
       event_length: eventLength,
       event_type: eventType,
       comment: comment,
+      user: route.params.params.user,
     };
-
+    console.log("data",data)
     const options = {
       method: 'POST',
       headers: {
