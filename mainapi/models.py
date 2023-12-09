@@ -10,4 +10,5 @@ class Events(models.Model):
     event_length = models.TimeField(null=True)
     event_type =  models.ForeignKey(Events_Types, on_delete=models.CASCADE, related_name="type")
     comment = models.TextField(null=True) 
+    user_id = models.IntegerField(null=True)
 # Create your models here.
