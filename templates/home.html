@@ -41,8 +41,20 @@
             <button name="action" value="search_real_estate" type="submit" class="btn_home">Искать</button>
         </form>
     </div>
+
+    <div class="search__home"> 
+        <form method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+            <p>Поиск по координатам</p>
+
+            <input type="text" name="search_by_latX" placeholder="Широта" >
+            <input type="text" name="search_by_lngY" placeholder="Долгота" >
+
+            <button name="action" value="search_by_coordinates" type="submit" class="btn_home">Искать</button>
+        </form>
+    </div>
  
-    {% for real_estate in real_estates %}
+    {% for real_estate in real_estates_coordinates %}
         {{real_estate}}
     {% empty %}
         <p>Результаты не найдены</p>

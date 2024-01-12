@@ -23,6 +23,7 @@ redis_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_
 @csrf_exempt
 def registrate(request):
     if request.method == 'POST':
+        
         json_data = json.loads(request.body)
         nickname = json_data['nickname']
         password = int(json_data['password'])

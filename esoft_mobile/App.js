@@ -14,12 +14,12 @@ function RegisterScreen({ navigation }) {
       await AsyncStorage.setItem('token', value1);
       await AsyncStorage.setItem('user', value2);
     } catch (e) {
-      console.log("Жопа пришла")
+      console.log("Мдда пришла")
     }
   };
 
   const handleRegister = async () => {
-    const url = "https://c77b-95-181-208-83.ngrok-free.app/api/registrate";
+    const url = "https://2b4b-95-181-208-83.ngrok-free.app/api/registrate";
 
 // Данные для отправки
     let data = {
@@ -40,7 +40,7 @@ function RegisterScreen({ navigation }) {
 // Выполнение запроса]
   console.log("response")
   let res = await fetch(url, options)
-  console.log("res error")
+  console.log("res",res)
   let result = await res.json(); 
   console.log(result,"result")
     console.log(result.token,"token")
@@ -105,7 +105,7 @@ const HomeScreen = ({ route, navigation }) => {
   );
 
   const getEvents = async (id) => {
-    const url = "https://c77b-95-181-208-83.ngrok-free.app/api/get_events";
+    const url = "https://2b4b-95-181-208-83.ngrok-free.app/api/get_events";
 
     let data = {
       user: id,
@@ -131,7 +131,7 @@ const HomeScreen = ({ route, navigation }) => {
   const handleDeleteEvent = async (id) => {
     try {
       // Отправляем запрос на удаление события по его id
-      const url = `https://c77b-95-181-208-83.ngrok-free.app/api/delete_event`;
+      const url = `https://2b4b-95-181-208-83.ngrok-free.app/api/delete_event`;
       let datas = {
         id: id,
       };
@@ -234,7 +234,7 @@ const AddSchedule = ({ route, navigation }) => {
   const [comment, setComment] = useState('Комментарий отсутствует');
 
   const handleCreateEvent = async () => {
-    const url = 'https://c77b-95-181-208-83.ngrok-free.app/api/create_event';
+    const url = 'https://2b4b-95-181-208-83.ngrok-free.app/api/create_event';
     console.log(route.params.params.user,"route.params.params.user")
     const data = {
       event_take: eventTake,

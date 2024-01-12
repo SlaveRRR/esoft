@@ -100,7 +100,35 @@ def search_real_estates(city, street, house, apartment, target_city, target_stre
         return True
     else: 
         return False
-    
+
+def hit_check(real_estate, latX, lngY):
+
+    if real_estate.latX == None or real_estate.lngY == None:
+        print("real_estate.latX",real_estate.latX)
+        return False
+    print("latX",latX)
+    print("lngY",lngY)
+
+    lat_decimals = len(str(latX).split(".")[1]) if "." in str(latX) else 0
+    lng_decimals = len(str(lngY).split(".")[1]) if "." in str(lngY) else 0
+
+    print(lat_decimals,"lat_decimals")
+    print(lng_decimals,"lng_decimals")
+
+    print("str(real_estate.latX)[:(3+lat_decimals)]",str(real_estate.latX)[:(3+lat_decimals)])
+
+    lat_interval = float(str(real_estate.latX)[:(3+lat_decimals)])
+    lng_interval = float(str(real_estate.lngY)[:(3+lng_decimals)])
+
+    print("lat_interval",lat_interval)
+    print("lng_interval",lng_interval)
+
+    print("latX - lat_interval",latX - lat_interval)
+    print("lngY - lng_interval",lngY - lng_interval)
+
+    if  lat_interval - latX == 0 and  lng_interval - lngY == 0:
+        return True
+    return False
 
 def home(request):
 
@@ -139,6 +167,10 @@ def home(request):
     if request.method == 'POST':
         action = request.POST.get('action')
 
+        
+
+
+
         if action == 'search_fio':
             fio = request.POST.get('query') # получаем фио из формы
             fio_parts = fio.split(' ') # ['Иванов', 'Петр', 'Сергеевич']
@@ -159,6 +191,18 @@ def home(request):
 
             return render(request, 'home.html', context)
         
+        if action == 'search_by_coordinates':
+            latX = float(request.POST.get('search_by_latX')) 
+            lngY = float(request.POST.get('search_by_lngY'))
+
+            real_estates_coordinates = []
+
+            for real_estate in all_real_estates:
+                if hit_check(real_estate,latX,lngY) == True:
+                    real_estates_coordinates.append(f"Найдена недвижимость: {real_estate.heading}, город: {real_estate.city}, улица: {real_estate.street}, дома {real_estate.house_number}, квартира {real_estate.apartment_number}\n")
+                print(real_estates_coordinates,"real_estates_coordinates")
+            context['real_estates_coordinates'] = real_estates_coordinates
+
         if action == 'search_real_estate':
             address = request.POST.get('search_real_state') 
             address_parts = address.split(' ') # ['Город', 'Улица', 'Дом', 'Квартира']
