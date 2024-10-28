@@ -26,7 +26,7 @@ def registrate(request):
         
         json_data = json.loads(request.body)
         nickname = json_data['nickname']
-        password = int(json_data['password'])
+        password = json_data['password']
         user = authenticate(request, nickname=nickname, password=password)
         if user:
             key = generate_key()
@@ -76,17 +76,18 @@ def delete_event(request):
 
 @csrf_exempt
 def create_event(request):
-    json_data = json.loads(request.body)
-    user = json_data['user']
-    if user:
-        event_take = json_data['event_take']
-        event_length = json_data['event_length']
-        event_type = json_data['event_type']
-        comment = json_data['comment']
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        user = json_data['user']
+        if user:
+            event_take = json_data['event_take']
+            event_length = json_data['event_length']
+            event_type = json_data['event_type']
+            comment = json_data['comment']
 
-        event = Events(None,event_take,event_length,event_type,comment,user)
-        event.save()
-        return JsonResponse({'status':'300','result':'successfully created'})
+            event = Events(None,event_take,event_length,event_type,comment,user)
+            event.save()
+    return JsonResponse({'status':'300','result':'successfully created'})
 
 
 

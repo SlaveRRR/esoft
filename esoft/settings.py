@@ -100,11 +100,15 @@ DATABASES = {
         "NAME": "esoft",
         "USER" : "root",
         "PORT" : "3306",
+        "PASSWORD" : "",
+         "HOST" : "127.0.0.1",
         'OPTIONS': { 
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'" 
         }
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -136,7 +140,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-REDIS_HOST = 'localhost'
+REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 
 CACHES = {

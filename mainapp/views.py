@@ -74,7 +74,7 @@ def search_fio(last_name, first_name, middle_name, target_last_name, target_firs
     distance_last_name = levenshtein_distance(last_name, target_last_name)
     distance_first_name = levenshtein_distance(first_name, target_first_name)
     distance_middle_name = levenshtein_distance(middle_name, target_middle_name)
-
+   
     if (
         distance_last_name <= 3
         and distance_first_name <= 3
@@ -170,22 +170,23 @@ def home(request):
         
 
 
-
+        # Арсеньев Николаевич Евгений 
         if action == 'search_fio':
             fio = request.POST.get('query') # получаем фио из формы
+         
             fio_parts = fio.split(' ') # ['Иванов', 'Петр', 'Сергеевич']
             
             target_last_name = fio_parts[0] #иванов
             target_first_name = fio_parts[1] #петр
             target_middle_name = fio_parts[2] #сергеевич
-
+            
             users = User.objects.all()
         
             usersFinal = []
 
             for user in users:
                 if search_fio(user.last_name, user.first_name, user.middle_name, target_last_name, target_first_name, target_middle_name):
-                    usersFinal.append(f"Найден клиент: {user.last_name} {user.first_name} {user.middle_name}")
+                    usersFinal.append(f"Найден клиент: {user.last_name} {user.first_name} {user.middle_name}\n")
             
             context ['users'] = usersFinal
 
@@ -371,7 +372,7 @@ def profile(request):
     demands = Demand.objects.filter(client_id=request.user.id)
 
     #Список риэлторов
-    realtors = User.objects.filter(is_realtor=1)
+    realtors = User.objects.filter(is_realtor=True)
 
     context['offers'] = offers #массив предложений
     context['real_estates'] = real_estates #массив (объектов) недвижек конкретного юзера
@@ -541,7 +542,7 @@ def create_offer(request):
         user.delete_value = False
 
     #Список риэлторов
-    realtors = User.objects.filter(is_realtor=1)
+    realtors = User.objects.filter(is_realtor=True)
 
     #Список недвижек конкретного пользователя 
     user_real_estates = User_Real_estate.objects.filter(user_id=request.user.id) #объекты юзер_недвижимости конкретного юзера {id, user_id, real_estate_id}
@@ -577,7 +578,7 @@ def create_demand(request):
         user.delete_value = False
 
     #Список риэлторов
-    realtors = User.objects.filter(is_realtor=1)
+    realtors = User.objects.filter(is_realtor=True)
 
     context = {'realtors': realtors}
     return render(request, 'create_demand.html', context)
@@ -624,7 +625,7 @@ def manage_clients(request):
             context['realtor_offers'] = realtor_offers
             context['realtor_demands'] = realtor_demands
 
-    realtors = User.objects.filter(is_realtor=1)
+    realtors = User.objects.filter(is_realtor=True)
     clients = User.objects.filter(is_realtor=0)
     context['realtors'] = realtors
     context['clients'] = clients

@@ -19,7 +19,10 @@ function RegisterScreen({ navigation }) {
   };
 
   const handleRegister = async () => {
-    const url = "https://2b4b-95-181-208-83.ngrok-free.app/api/registrate";
+    const ngrokUrl = "https://48f2-95-24-35-191.ngrok-free.app/"
+    
+    const url = `${ngrokUrl}api/registrate`
+
 
 // Данные для отправки
     let data = {
